@@ -1,0 +1,6 @@
+.venv/
+__pycache__/
+*.pyc
+
+# Large, regenerable rasters — rebuild with geo/03_lst_gee.py or share via Drive
+data/raster/*.tif

@@ -1,0 +1,14 @@
+{
+"type": "FeatureCollection",
+"name": "datacentres",
+"crs": { "type": "name", "properties": { "name": "urn:ogc:def:crs:OGC:1.3:CRS84" } },
+"features": [
+{ "type": "Feature", "properties": { "dc_id": "stt_pune_dighi", "name": "STT Pune DC 1-5 (Dighi campus)", "operator": "ST Telemedia GDC India", "status": "operational (since 2009)", "capacity_mw": "40", "use_in_analysis": "yes", "site_group": "STT Dighi" }, "geometry": { "type": "Point", "coordinates": [ 73.864527, 18.603795 ] } },
+{ "type": "Feature", "properties": { "dc_id": "nxtra_pune_hinjewadi", "name": "Nxtra Pune (Hinjewadi) - likely Nxtra Pune II", "operator": "Nxtra (Airtel)", "status": "operational", "capacity_mw": "21 (if Pune II)", "use_in_analysis": "yes", "site_group": "Nxtra Hinjewadi" }, "geometry": { "type": "Point", "coordinates": [ 73.6896, 18.59624 ] } },
+{ "type": "Feature", "properties": { "dc_id": "nxtra_pune_1", "name": "Nxtra Pune I", "operator": "Nxtra (Airtel)", "status": "operational", "capacity_mw": "3", "use_in_analysis": "yes", "site_group": "Nxtra Hinjewadi" }, "geometry": { "type": "Point", "coordinates": [ 73.69104, 18.59301 ] } },
+{ "type": "Feature", "properties": { "dc_id": "iron_mountain_pun1", "name": "Iron Mountain PUN-1 (ex-Web Werks)", "operator": "Iron Mountain / Web Werks", "status": "operational", "capacity_mw": "1.6", "use_in_analysis": "yes", "site_group": "Hinjewadi Phase 1" }, "geometry": { "type": "Point", "coordinates": [ 73.727962, 18.591291 ] } },
+{ "type": "Feature", "properties": { "dc_id": "silvernox_pune", "name": "Silvernox Datacenter Pune", "operator": "Silvernox", "status": "operational", "capacity_mw": "4", "use_in_analysis": "yes", "site_group": "Hinjewadi Phase 1" }, "geometry": { "type": "Point", "coordinates": [ 73.728991, 18.591727 ] } },
+{ "type": "Feature", "properties": { "dc_id": "microsoft_pimpri", "name": "Microsoft Pune - Pimpri", "operator": "Microsoft", "status": "construction / partly operational", "capacity_mw": null, "use_in_analysis": "no - construction pad in Mar-May 2026 imagery", "site_group": null }, "geometry": { "type": "Point", "coordinates": [ 73.836685, 18.619553 ] } },
+{ "type": "Feature", "properties": { "dc_id": "tata_comm_pune", "name": "Tata Communications Pune ('Tata Jade IDC')", "operator": "Tata Communications", "status": "listed operational", "capacity_mw": null, "use_in_analysis": "no - not a separate data centre", "site_group": null }, "geometry": { "type": "Point", "coordinates": [ 73.868956, 18.606895 ] } }
+]
+}

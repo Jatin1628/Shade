@@ -1,0 +1,1216 @@
+{{Short description|Local elections in Maharashtra, India}}
+{{Use dmy dates|date=January 2026}}
+{{Use Indian English|date=January 2026}}
+{{Infobox election
+| election_name = 2026 Pune Municipal Corporation election
+| type = Parliamentary
+| ongoing = no
+| election_date = 15 January 2026
+| country = India
+| previous_election = 2017 Pune Municipal Corporation election
+| previous_year = 2017
+| next_election = 
+| next_year = 2031
+| seats_for_election = All 165 seats in [[Pune Municipal Corporation]]
+| majority_seats = 83
+| image1 = [[File:Lotus flower symbol.svg|120x120px]]
+| leader1 = 
+| party1 = Bharatiya Janata Party
+| leader_since1 = 
+| leaders_seat1 = 
+| last_election1 = 97
+| seats1 = '''118'''
+| seat_change1 = {{increase}} 22
+<!-- NCP -->| image2 = [[File:Nationalist Congress Party Election Symbol.png|120x120px]]
+| leader2 = 
+| party2 = Nationalist Congress Party
+| leader_since2 = 
+| leaders_seat2 = 
+| last_election2 = 39
+| seats2 = 26
+| seat_change2 = {{decrease}} 13
+<!-- Congress -->| image3 = [[File:Hand INC.svg|120x120px]]
+| leader3 = 
+| party3 = Indian National Congress
+| leader_since3 = 
+| leaders_seat3 = 
+| last_election3 = 9
+| seats3 = 16
+| seat_change3 = {{increase}} 7
+| image4 = 
+| party4 = NCP(SP)
+| seats4 = 3
+| last_election4 = new
+| seat_change4 = new
+| colour4 = #0640AD
+| image5 = 
+| party5 = SS(UBT)
+| last_election5 = new
+| seats5 = 1
+| seat_change5 = new
+| colour5 = #FF6634
+| party6 = Republican Party of India (Athawale)
+| last_election6 = 1
+| seats6 = 1
+| seat_change6 = -
+| colour6 = #0a1cee
+| party7= Shiv Sena
+| last_election7= 10
+| seats7= 0
+| seat_change7= {{decrease}} 10
+| colour7= #e75517
+| party8= Maharashtra Navnirman Sena
+| last_election8= 2
+| seats8= 0
+| seat_change8= {{decrease}} 2
+| colour8= #d63005
+}}
+
+
+The '''2026 Pune Municipal Corporation election''' was an election of members to the [[Pune Municipal Corporation]] which governs [[Pune]], the 7th largest [[List of metropolitan areas in India|metropolis]] in [[India]]. The election took place on 15 January 2026 and the counting took place on 16 January 2026.<ref>{{Cite web |date=2025 |title=Pune Municipal Corporation General Election Program 2025-26 |url=https://www.pmc.gov.in/en/b/pmc-general-election-program-2025-26 |url-status=live |archive-url=https://web.archive.org/web/20260101081840/https://www.pmc.gov.in/en/b/pmc-general-election-program-2025-26 |archive-date=2026-01-01 |access-date=2026-01-01 |website=Pune Municipal Corporation}}</ref><ref>{{Cite news |last=Mutha |first=Snehal |date=2025-12-15 |title=Polls for BMC, 28 other municipal corporations on Jan. 15, vote count on Jan. 16 |url=https://www.thehindu.com/news/cities/mumbai/mumbai-bmc-maharashtra-municipal-corporation-election/article70398883.ece |url-status=live |archive-url=https://web.archive.org/web/20251217065949/https://www.thehindu.com/news/cities/mumbai/mumbai-bmc-maharashtra-municipal-corporation-election/article70398883.ece |archive-date=2025-12-17 |access-date=2026-01-01 |work=The Hindu |language=en-IN |issn=0971-751X}}</ref> The [[Bharatiya Janata Party]] won a decisive victory winning 119 of the 168 seats.<ref>https://www.indiatvnews.com/maharashtra/pune-municipal-corporation-election-results-2026-live-bjp-vs-shinde-sena-vs-ncp-who-will-win-1025294</ref> BJP's Manjusha Nagpure was elected as the mayor and RPI(A)'s Parshuram Wadekar as the deputy mayor.
+
+==Background==
+After the Pune Municipal Corporation (PMC) elections of 2017, the city was divided into 41 administrative wards, electing a total of 162 corporators, with each ward returning four members. As per the latest ward formation and reservation draft notification issued by the Government of Maharashtra, The city is divided into 41 wards(प्रभाग). 40 wards are represented by 4 corporators(नगरसेवक) each, while 1 ward(No. 38) is represented by 5 corporators. Thus, the general body consists of 165 elected councilors or corporators. All major political parties active in the state, contest the elections.
+
+==Schedule==
+===Ward Structure Event===
+
+{| class="wikitable"
+!Structure Event
+!Schedule
+|-
+|Draft Ward Structure
+| 22 August 2025
+|-
+|Objections and Suggestion 
+| 11 & 12 September 2025
+|-
+| Final draft
+| 6 October 2025
+|}
+
+===Poll Event===
+
+{| class="wikitable"
+!Poll Event
+!Schedule
+|-
+|Issue of notification of election
+|15 December 2025 
+|-
+|Last Date for filing nomination
+|30 December 2025 
+|-
+|Scrutiny of Nominations
+|31 December 2025 
+|-
+|Withdrawal of Candidature
+|2 January 2026 
+|-
+|Date of Poll
+|15 January 2026 
+|-
+|Date of Counting
+|16 January 2026 
+|}
+== Result ==
+{| class="wikitable sortable"
+!<big>Sr.</big>
+<big>no</big>
+!<big>Ward</big> 
+<big>Number</big>
+!<big>Ward Name</big>
+!<big>Seat</big>
+!<big>Winner</big>
+!
+!<big>Party</big>
+|-
+!1
+! rowspan="4" |1
+! rowspan="4" |Kalas-Dhanori-Lohegaon
+|A
+|Ashwini Rahul (Appa) Bhandare
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!2
+|B
+|Dangat Sangita Sandeep
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!3
+|C
+|Rekha Chandrakant Tingre
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!4
+|D
+|Anil (Bobby) Vasantrao Tingre
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!5
+! rowspan="4" |2
+! rowspan="4" |Phulenagar-Nagpur Chawl
+|A
+|Dhende Nandini Siddharth
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!6
+|B
+|Ravi (Harshal) Ramesh Tingre
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!7
+|C
+|Shital Ajay Sawant
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!8
+|D
+|Suhas Vijay Tingre
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!9
+! rowspan="4" |3
+! rowspan="4" |Vimannagar-Lohegaon
+|A
+|Dr. Shreyas Pritam Khandve
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!10
+|B
+|Anil Dilip Satav
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!11
+|C
+|Aishwarya Surendra Pathare
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!12
+|D
+|Dabhade Ramdas Dattatray
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!13
+! rowspan="4" |4
+! rowspan="4" |Kharadi-Wagholi
+|A
+|Shri. Bansode Shailjeet Jaywant
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!14
+|B
+|Ratnamala Sandeep Satav
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!15
+|C
+|Bharane Trupti Santosh
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!16
+|D
+|Surendra Bapusaheb Pathare
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!17
+! rowspan="4" |5
+! rowspan="4" |Kalyaninagar-Vadgaonsheri
+|A
+|Narayan Mohan Galande
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!18
+|B
+|Galande Shweta Mukund
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!19
+|C
+|Galande Kavita Mahendra
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!20
+|D
+|Mulik Yogesh Tukaram
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!21
+! rowspan="4" |6
+! rowspan="4" |Yerawada-Gandhinagar
+|A
+|Adv. Avinash Raj Salve
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!22
+|B
+|Saira Hanif Sheikh
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!23
+|C
+|Ashwini Daniel Landge
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!24
+|D
+|Vishal Hari Malke
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!25
+! rowspan="4" |7
+! rowspan="4" |Gokhalenagar-Wakdewadi
+|A
+|Manvatkar Nisha Sachin
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!26
+|B
+|Anjali Vinodanna Orse
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!27
+|C
+|Adv. Nikam Nilesh Narayan
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!28
+|D
+|Datta Bahirat
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!29
+! rowspan="4" |8
+! rowspan="4" |Aundh-Bopodi
+|A
+|Parshuram Balkrishna Wadekar
+|{{Party color cell|Republican Party of India (Athawale)}}
+|[[Republican Party of India (Athawale)]]
+|-
+!30
+|B
+|Bhakti Ajit Gaikwad
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!31
+|C
+|Chhajed Sapna Anand
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!32
+|D
+|Chandrashekhar (Sunny) Vinayak Nimhan
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!33
+! rowspan="4" |9
+! rowspan="4" |Sus-Baner-Pashan
+|A
+|Chimte Rohini Sudhir
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!34
+|B
+|Chandere Baburao Dattoba
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!35
+|C
+|Kokate Mayuri Rahul
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!36
+|D
+|Amol Ratan Balwadkar
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!37
+! rowspan="4" |10
+! rowspan="4" |Bavdhan-Bhusari Colony
+|A
+|Kiran Dagde Patil
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!38
+|B
+|Pawar Rupali Sachin
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!39
+|C
+|Varape Alpana Ganesh
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!40
+|D
+|Vedepatil Dilip Tukaram
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!41
+! rowspan="4" |11
+! rowspan="4" |Rambaug Colony-Shivteerthnagar
+|A
+|Harshwardhan Deepak Mankar
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!42
+|B
+|Dokh Deepali Santosh
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!43
+|C
+|Butala Manisha Sandeep
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!44
+|D
+|Adv. Ramchandra (Chandusheth) Atmaram Kadam
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!45
+! rowspan="4" |12
+! rowspan="4" |Shivajinagar-Model Colony
+|A
+|Amruta Ram Mhetre (Zadpe)
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!46
+|B
+|Shri. Apoorva Dattatray Khade
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!47
+|C
+|Sau. Pooja Pratul Jagade
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!48
+|D
+|Ekabote Nivedita Gajanan
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!49
+! rowspan="4" |13
+! rowspan="4" |Pune Station-Jay Jawannagar
+|A
+|Nilesh Suresh Alhat
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!50
+|B
+|Sumayya Maheboob Nadaf
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!51
+|C
+|Vaishali Nagnath Bhalerao
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!52
+|D
+|Arvind Shinde
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!53
+! rowspan="4" |14
+! rowspan="4" |Koregaon Park-Ghorpadi-Mundhwa
+|A
+|Himali Navnath Kamble
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!54
+|B
+|Dhayarkar Kishor Vishnu
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!55
+|C
+|Kawade Surekha Chandrakant
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!56
+|D
+|Gaikwad Umesh Dnyaneshwar
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!57
+! rowspan="4" |15
+! rowspan="4" |Manjri-Budhruk-Keshavnagar-Sadesatranali
+|A
+|Abnave Nanda Anil
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!58
+|B
+|Dr. Dada Kodre
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!59
+|C
+|Ghule Sarika Amit
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!60
+|D
+|Ajit Dattatraya Ghule
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!61
+! rowspan="4" |16
+! rowspan="4" |Hadapsar-Satavwadi
+|A
+|Bankar Vaishali Sunil
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!62
+|B
+|Jangle Ujwala Subhash
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!63
+|C
+|Gawade Nitin Nivrutti
+|{{Party color cell|Shiv Sena (Uddhav Balasaheb Thackeray)}}
+|[[Shiv Sena (Uddhav Balasaheb Thackeray)]]
+|-
+!64
+|D
+|Tupe Maruti Shivaji
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!65
+! rowspan="4" |17
+! rowspan="4" |Ramtekdi-Malwadi-Vaiduwadi
+|A
+|Londhe Khandu Satish
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!66
+|B
+|Hemlata Nilesh Magar
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!67
+|C
+|Payal Viraj Tupe
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!68
+|D
+|Prashant (Mama) Tupe
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!69
+! rowspan="4" |18
+! rowspan="4" |Wanowrie-Salunkhe Vihar
+|A
+|Adv. Kedari Sahil Shivaji
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!70
+|B
+|Kalinda Muralidhar Punde
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!71
+|C
+|Komal Samir Shendkar
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!72
+|D
+|[[Prashant Jagtap|Jagtap Prashant Sudam]]
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!73
+! rowspan="4" |19
+! rowspan="4" |Kondhwa Khurd-Kausurbaug
+|A
+|Taslim Hasan Shaikh
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!74
+|B
+|Aasia Maniyar
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!75
+|C
+|Kashif Fakrul Syed
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!76
+|D
+|Pathan Abdul Ghafoor Ahmed
+|{{Party color cell|Nationalist Congress Party (Sharadchandra Pawar)}}
+|[[Nationalist Congress Party (Sharadchandra Pawar)]]
+|-
+!77
+! rowspan="4" |20
+! rowspan="4" |Shankar Maharaj Math-Bibewadi
+|A
+|Aaba (Rajendra) Y. Shilimkar
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!78
+|B
+|Divekar Tanvi Prashant
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!79
+|C
+|Deshpande Mansi Manoj
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!80
+|D
+|Gaurav Ganesh Ghule
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!81
+! rowspan="4" |21
+! rowspan="4" |Mukundnagar-Salisbury Park
+|A
+|Vairage Prasannajit Bharat
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!82
+|B
+|Shilimkar Siddhi Avinash
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!83
+|C
+|Chorbele Manisha Pravin
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!84
+|D
+|Bhimale Srinath Yashwant
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!85
+! rowspan="4" |22
+! rowspan="4" |Kashewadi-Dias Plot
+|A
+|Mrunal Pandurang (Bappu) Kamble
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!86
+|B
+|Rafiq Abdul Rahim Sheikh
+|{{Party color cell|Indian National Congress}}
+|[[Indian National Congress]]
+|-
+!87
+|C
+|Archana Tushar Patil
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!88
+|D
+|Vivek Mahadev Yadav
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!89
+! rowspan="4" |23
+! rowspan="4" |Rawiwar Peth-Nana Peth
+|A
+|Javale Pallavi Chandrashekhar
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!90
+|B
+|Andekar Sonali Vanraj
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!91
+|C
+|Andekar Lakshmi Udayakant
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!92
+|D
+|Dhanwade Vishal Gorakh
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!93
+! rowspan="4" |24
+! rowspan="4" |Kasba Ganpati -Kamla Nehru Hospital-KEM hospital
+|A
+|Bahirat Kalpana Dilip
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!94
+|B
+|Ujwala Ganesh Yadav
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!95
+|C
+|Devendra (Chhotu) Wadke
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!96
+|D
+|Bidkar Ganesh Madhukar
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!97
+! rowspan="4" |25
+! rowspan="4" |Shaniwar Peth-Mahatma Phule Mandai
+|A
+|Sau. Swapnali Nitin Pandit
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!98
+|B
+|Raghavendra (Bappu) Mankar
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!99
+|C
+|Swarada Gaurav Bapat
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!100
+|D
+|Tilak Kunal Shailesh
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!101
+! rowspan="4" |26
+! rowspan="4" |GhorpadePeth-Gurwarpeth-Samta Bhoomi
+|A
+|Ganesh Bugaji Kalyankar
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!102
+|B
+|Malwade Sneha Namdev
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!103
+|C
+|Aishwarya Samrat Thorat
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!104
+|D
+|Ajay Appasaheb Khedekar
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!105
+! rowspan="4" |27
+! rowspan="4" |Navi Peth- Parvati
+|A
+|Mahesh (Amar) Vilas Awale
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!106
+|B
+|Smita Vaste
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!107
+|C
+|Gaud Lata Raghunath
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!108
+|D
+|Shr. Dheeraj Ramachandra Ghate
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!109
+! rowspan="4" |28
+! rowspan="4" |Janta Vasahat-Hingane Khurd
+|A
+|Rithe Vrushali Anand
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!110
+|B
+|Gadade Priya Shivaji
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!111
+|C
+|Suraj Nathuram Lokhande
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!112
+|D
+|Adv. Prasanna (Dada) Ghanshyam Jagtap
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!113
+! rowspan="4" |29
+! rowspan="4" |Deccan Gymkhana-Happy Colony
+|A
+|Pande Sunil Namdev
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!114
+|B
+|Adv. Sawalekar Mitali Kuldeep
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!115
+|C
+|Khardekar Manjushree Sandeep
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!116
+|D
+|Joshi Puneeth Srikant
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!117
+! rowspan="4" |30
+! rowspan="4" |Karvenagar-Hingane Home Colony
+|A
+|Dudhane Swapnil Devaram
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!118
+|B
+|Barate Reshma Santosh
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!119
+|C
+|Tejashree Mahesh Pawale
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!120
+|D
+|Barate Rajesh Kisan
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!121
+! rowspan="4" |31
+! rowspan="4" |Mayur Colony-Kothrud
+|A
+|Mathwad Dinesh Mahadev
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!122
+|B
+|Jyotsna Jagannath Kulkarni
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!123
+|C
+|Vasanti Navnath Jadhav
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!124
+|D
+|Sutar Prithviraj Shashikant
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!125
+! rowspan="4" |32
+! rowspan="4" |Warje-Popularnagar
+|A
+|Bhosale Harshada Shantanu
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!126
+|B
+|Barate Bharatbhushan Sharadchandra
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!127
+|C
+|Wanjale Sayali Rameshbhai
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!128
+|D
+|Dodke Sachin Shivajirao
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!129
+! rowspan="4" |33
+! rowspan="4" |Shivane-Khadakwasla-Dhayari
+|A
+|Dhanashree Dattatray Kolhe
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!130
+|B
+|Anita Tukaram Ingle
+|{{Party color cell|Nationalist Congress Party (Sharadchandra Pawar)}}
+|[[Nationalist Congress Party (Sharadchandra Pawar)]]
+|-
+!131
+|C
+|Nanekar Subhash Muralidhar
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!132
+|D
+|Sopan (Kaka) Chavan
+|{{Party color cell|Nationalist Congress Party (Sharadchandra Pawar)}}
+|[[Nationalist Congress Party (Sharadchandra Pawar)]]
+|-
+!133
+! rowspan="4" |34
+! rowspan="4" |Vadgaon Budhruk-Dhayari
+|A
+|Charwad Haridas Krishna
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!134
+|B
+|Komal Sarang Navale
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!135
+|C
+|Jayshree Satyawan Bhumkar
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!136
+|D
+|Raju Murlidhar Laygude
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!137
+! rowspan="4" |35
+! rowspan="4" |Suncity-Manikbaug
+|A
+|Gosavi Jyoti Kishor
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!138
+|B
+|Manjusha Deepak Nagpure
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!139
+|C
+|More Sachin Raosaheb
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!140
+|D
+|Shrikant Shashikant Jagtap
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!141
+! rowspan="4" |36
+! rowspan="4" |Sahakarnagar-Padmavati
+|A
+|Veena Ganesh Ghosh
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!142
+|B
+|Bhosale Shailaja Arun
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!143
+|C
+|Sai Prashant Thopte
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!144
+|D
+|Mahesh Nanasaheb Wable
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!145
+! rowspan="4" |37
+! rowspan="4" | Dhankawadi-Katraj Dairy
+|A
+|Balabhau (Kishor) Uttam Dhankawade
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!146
+|B
+|Tapkir Varsha Vilas
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!147
+|C
+|Badak Tejashree Sachin
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!148
+|D
+|Arun Bhagwan Rajwade
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!149
+! rowspan="5" |38
+! rowspan="5" |Balajinagar-Ambegaon-Katraj
+|A
+|Smita Sudhir Kondhare
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!150
+|B
+|Beldare Sandeep Balasaheb
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!151
+|C
+|Beldare Seema Yuvraj
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!152
+|D
+|Chorghe Pratibha Rohidas
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!153
+|E
+|Khopade Vyankoji Maruti
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!154
+! rowspan="4" |39
+! rowspan="4" |Upper Super Indiranagar
+|A
+|Varsha Bhimrao Sathe
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!155
+|B
+|Pratik Prakash Kadam
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!156
+|C
+|Dhadve Rupali Dinesh
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!157
+|D
+|Bala (Pramod) Premchand Oswal
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!158
+! rowspan="4" |40
+! rowspan="4" |Kondhwa Budhruk-Yeolewadi
+|A
+|Archana Amit Jagtap
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!159
+|B
+|Kamthe Vrushali Sunil
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!160
+|C
+|Kadam Tushar Puja
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!161
+|D
+|Tilekar Ranjana Kundalik
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!162
+! rowspan="4" |41
+! rowspan="4" |Mohammadwadi-Undri
+|A
+|Alhat Prachi Ashish
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|-
+!163
+|B
+|Bandal Nivrutti Dnyanoba
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!164
+|C
+|Shweta Sachin Ghule
+|{{Party color cell|Nationalist Congress Party}}
+|[[Nationalist Congress Party]]
+|-
+!165
+|D
+|Tarwade Atul Narayan
+|{{Party color cell|Bharatiya Janata Party}}
+|[[Bharatiya Janata Party]]
+|}
+
+==See also==
+* [[2026 elections in India]]
+* [[Pune Municipal Corporation]]
+
+==References==
+{{reflist}}
+
+==External links==
+*[https://mahasec.maharashtra.gov.in/Home/Index State Election Commission Maharashtra Official Website]
+
+{{Maharashtra municipal corporation elections}}
+{{Authority control}}
+
+[[Category:2026 elections in India]]
+[[Category:Municipal corporation elections in Maharashtra|Pune]]
+[[Category:Pune Municipal Corporation]]

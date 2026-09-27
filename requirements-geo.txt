@@ -1,0 +1,13 @@
+earthengine-api==1.7.45
+geemap==0.38.8
+geopandas==1.1.4
+matplotlib==3.11.2
+numpy==2.5.3
+osmnx==2.1.1
+pandas==3.0.6
+pyogrio==0.13.0
+pyproj==3.8.0
+rasterio==1.5.1
+rasterstats==0.21.0
+requests==2.34.2
+shapely==2.1.2
