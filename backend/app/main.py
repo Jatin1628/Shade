@@ -4,7 +4,7 @@ Docs UI: http://127.0.0.1:8000/docs
 """
 import json
 import pandas as pd
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException, Query
 from fastapi.middleware.cors import CORSMiddleware
 from . import config as C
 from .scoring import score_wards
@@ -52,13 +52,19 @@ def top_wards(city: str, n: int = 10):
 
 
 @app.get("/wards/{city}/{ward_id}")
-def ward_detail(city: str, ward_id: int):
+def ward_detail(city: str, ward_id: int,
+                target_pct: float | None = Query(None, ge=5, le=60,
+                                                 description="Scenario: target canopy %"),
+                crown_m2: float | None = Query(None, ge=5, le=150,
+                                               description="Scenario: canopy per tree, m2")):
     gj, df = score_wards(_city(city))
     row = df[df["ward_id"] == ward_id]
     if row.empty:
         raise HTTPException(404, f"No ward {ward_id}")
     r = row.iloc[0].to_dict()
-    return {**r, "action_plan": action_plan(r["area_km2"], r[C.CANOPY_COLUMN]),
+    return {**r, "action_plan": action_plan(
+        r["area_km2"], r[C.CANOPY_COLUMN],
+        None if target_pct is None else target_pct / 100, crown_m2),
             "score_weights": {"heat": C.W_HEAT, "canopy": C.W_CANOPY,
                               "vulnerability": C.W_VULN}}
 

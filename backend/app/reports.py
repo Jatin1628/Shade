@@ -8,11 +8,12 @@ Save it OUTSIDE git, then set  FIREBASE_KEY_PATH=C:\\path\\to\\key.json
 """
 import os
 from datetime import datetime, timezone
-from fastapi import APIRouter, Header, HTTPException
+from fastapi import APIRouter, Header, HTTPException, Response
 from pydantic import BaseModel
 from . import config as C
 from .scoring import score_wards
 from .estimator import action_plan
+from .pdf import render_report_pdf
 
 router = APIRouter(prefix="/reports", tags=["reports"])
 _db = None
@@ -48,6 +49,8 @@ class ReportIn(BaseModel):
     city: str = "pune"
     ward_id: int
     mode: str = "citizen"          # 'citizen' | 'planner'
+    target_pct: float | None = None   # scenario: target canopy %
+    crown_m2: float | None = None     # scenario: canopy per tree
 
 
 @router.post("")
@@ -67,7 +70,9 @@ def create_report(body: ReportIn, authorization: str | None = Header(None)):
                      "priority": float(r["priority_score"]), "rank": int(r["priority_rank"]),
                      "vulnerability": float(r["vulnerability_n"]),
                      "vulnerabilitySource": r["vulnerability_source"]},
-        "actionPlan": action_plan(float(r["area_km2"]), float(r[C.CANOPY_COLUMN])),
+        "actionPlan": action_plan(float(r["area_km2"]), float(r[C.CANOPY_COLUMN]),
+                                  None if body.target_pct is None else body.target_pct / 100,
+                                  body.crown_m2),
     }
     ref = _firebase().collection("users").document(uid).collection("reports").document()
     ref.set(doc)
@@ -91,3 +96,15 @@ def get_report(report_id: str, authorization: str | None = Header(None)):
         raise HTTPException(404, "Report not found")
     out = d.to_dict(); out["createdAt"] = out["createdAt"].isoformat()
     return {"id": d.id, **out}
+
+
+@router.get("/{report_id}/pdf")
+def report_pdf(report_id: str, authorization: str | None = Header(None)):
+    """Re-render the PDF from the saved snapshot (no Storage needed)."""
+    uid = _uid(authorization)
+    d = _firebase().collection("users").document(uid).collection("reports").document(report_id).get()
+    if not d.exists:
+        raise HTTPException(404, "Report not found")
+    rep = d.to_dict(); rep["createdAt"] = rep["createdAt"].isoformat()
+    return Response(render_report_pdf(rep), media_type="application/pdf",
+                    headers={"Content-Disposition": f'attachment; filename="shade_ward{rep["ward"]}_{report_id[:6]}.pdf"'})
