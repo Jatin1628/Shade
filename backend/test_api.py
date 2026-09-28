@@ -54,3 +54,10 @@ def test_pdf_renders():
     pdf = render_report_pdf(rep)
     assert pdf[:4] == b"%PDF" and len(pdf) > 2000
     assert inr(27_647_216) == "Rs 2.76 crore"
+
+
+def test_vulnerability_uses_census_when_file_present():
+    from backend.app import config as C
+    ward = c.get("/wards/pune/3").json()
+    expected = "census" if C.VULN_FILE.exists() else "placeholder_built_frac"
+    assert ward["vulnerability_source"] == expected
