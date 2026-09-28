@@ -4,3 +4,6 @@ __pycache__/
 
 # Large, regenerable rasters — rebuild with geo/03_lst_gee.py or share via Drive
 data/raster/*.tif
+
+*firebase*key*.json
+.env
