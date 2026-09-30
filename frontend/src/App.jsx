@@ -1,12 +1,11 @@
 import L from "leaflet";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import {
   MapContainer,
   TileLayer,
   GeoJSON,
   Marker,
   Popup,
-  Circle,
   useMap,
 } from "react-leaflet";
 
@@ -22,19 +21,136 @@ import "./index.css";
 
 const PUNE_CENTER = [18.5204, 73.8567];
 
-function DataCentreMarkers({ dataCentres, onSelect }) {
+// Module-level icon instances so react-leaflet never swaps icons needlessly.
+// Selected data-centre marker: same blue Leaflet pin, plus a CSS glow
+// (.dc-marker-selected) and a green halo drawn underneath it.
+const defaultDataCentreIcon = new L.Icon.Default();
+
+const selectedDataCentreIcon = new L.Icon.Default({
+  className: "dc-marker-selected",
+});
+
+const selectedHaloIcon = L.divIcon({
+  className: "dc-selected-halo",
+  iconSize: [52, 52],
+  iconAnchor: [26, 49],
+});
+
+const isFiniteNumber = (value) =>
+  typeof value === "number" && Number.isFinite(value);
+
+function formatSigned(value, digits = 1) {
+  if (!isFiniteNumber(value)) return "—";
+
+  const rounded = Number(value.toFixed(digits));
+  const sign = rounded < 0 ? "−" : "+";
+
+  return `${sign}${Math.abs(rounded).toFixed(digits)}`;
+}
+
+function formatFixed(value, digits = 1) {
+  return isFiniteNumber(value) ? value.toFixed(digits) : "—";
+}
+
+// "0–0.2 km (campus)" -> { range: "0–0.2 km", tag: "campus" }
+function getRingParts(ringLabel) {
+  const label = String(ringLabel ?? "");
+  const match = label.match(/^(.*?)\s*\(([^)]*)\)\s*$/);
+
+  if (!match) return { range: label, tag: null };
+
+  return { range: match[1], tag: match[2] };
+}
+
+// A ring counts as "elevated" only when its surface-temperature excess sits
+// above the 95th percentile of the look-alike spots (values from the API).
+const LOOKALIKE_UPPER_PERCENTILE = 95;
+
+function buildKeyFinding(rows) {
+  const referenceRow = rows.find((row) => /reference/i.test(row.ring ?? ""));
+
+  const rings = rows.filter(
+    (row) =>
+      !/reference/i.test(row.ring ?? "") &&
+      isFiniteNumber(row.lst_minus_reference)
+  );
+
+  if (rings.length === 0) return null;
+
+  const hasPercentiles = rings.every((row) =>
+    isFiniteNumber(row.excess_percentile_vs_lookalikes)
+  );
+
+  let statement =
+    "Surface temperature differences from the reference area are shown for each ring.";
+  let definition = null;
+
+  if (hasPercentiles) {
+    const elevatedCount = rings.filter(
+      (row) =>
+        row.excess_percentile_vs_lookalikes > LOOKALIKE_UPPER_PERCENTILE
+    ).length;
+
+    if (elevatedCount === 0) {
+      statement =
+        "Surface temperature is not consistently elevated around this site.";
+    } else if (elevatedCount === rings.length) {
+      statement =
+        "Surface temperature is elevated in every ring measured around this site.";
+    } else {
+      statement = `Surface temperature is elevated in ${elevatedCount} of ${rings.length} rings around this site.`;
+    }
+
+    const lookalikeCount = rings.find((row) =>
+      isFiniteNumber(row.n_lookalikes)
+    )?.n_lookalikes;
+
+    definition = `“Elevated” means above the ${LOOKALIKE_UPPER_PERCENTILE}th percentile of ${
+      lookalikeCount ? `${lookalikeCount} ` : ""
+    }look-alike built-up spots.`;
+  }
+
+  const referenceRange = referenceRow
+    ? getRingParts(referenceRow.ring).range
+    : null;
+
+  return {
+    statement,
+    rings: rings.map((row) => {
+      const { range, tag } = getRingParts(row.ring);
+      const label = tag ? tag.charAt(0).toUpperCase() + tag.slice(1) : range;
+
+      return {
+        key: `${row.site_group}-${row.ring_index}`,
+        label,
+        value: `${formatSigned(row.lst_minus_reference)}°C`,
+      };
+    }),
+    note: `Daytime land-surface temperature, relative to the ${
+      referenceRange ? `${referenceRange} ` : ""
+    }reference area.`,
+    definition,
+  };
+}
+
+function DataCentreMarkers({ dataCentres, selectedDataCentre, onSelect }) {
   if (!dataCentres?.sites?.features) return null;
+
+  const selectedId = selectedDataCentre?.properties?.dc_id;
 
   return (
     <>
       {dataCentres.sites.features.map((feature) => {
         const [lng, lat] = feature.geometry.coordinates;
         const properties = feature.properties;
+        const isSelected = selectedId === properties.dc_id;
 
         return (
           <Marker
             key={properties.dc_id}
             position={[lat, lng]}
+            icon={isSelected ? selectedDataCentreIcon : defaultDataCentreIcon}
+            zIndexOffset={isSelected ? 1000 : 0}
             eventHandlers={{
               click: () => onSelect(feature),
             }}
@@ -51,6 +167,24 @@ function DataCentreMarkers({ dataCentres, onSelect }) {
           </Marker>
         );
       })}
+
+      {selectedId &&
+        dataCentres.sites.features
+          .filter((feature) => feature.properties.dc_id === selectedId)
+          .map((feature) => {
+            const [lng, lat] = feature.geometry.coordinates;
+
+            return (
+              <Marker
+                key={`halo-${selectedId}`}
+                position={[lat, lng]}
+                icon={selectedHaloIcon}
+                interactive={false}
+                keyboard={false}
+                zIndexOffset={-1000}
+              />
+            );
+          })}
     </>
   );
 }
@@ -130,6 +264,7 @@ const LAYERS = {
     getValue: (p) => p.priority_score,
     format: (v) => v?.toFixed(2),
     defaultOpacity: 0.72,
+    legend: { startLabel: "High", endLabel: "Low", reversed: true },
   },
 
   heat: {
@@ -138,6 +273,7 @@ const LAYERS = {
     getValue: (p) => p.lst_builtup_mean,
     format: (v) => `${v?.toFixed(1)}°C`,
     defaultOpacity: 0.72,
+    legend: { startLabel: "Cooler", endLabel: "Hotter", reversed: false },
   },
 
   canopy: {
@@ -146,6 +282,7 @@ const LAYERS = {
     getValue: (p) => (p.tree_frac_wc ?? 0) * 100,
     format: (v) => `${v?.toFixed(1)}%`,
     defaultOpacity: 0.72,
+    legend: { startLabel: "Low", endLabel: "High", reversed: false },
   },
 
   ndvi: {
@@ -154,6 +291,7 @@ const LAYERS = {
     getValue: (p) => p.ndvi_s2_mean,
     format: (v) => v?.toFixed(3),
     defaultOpacity: 0.72,
+    legend: { startLabel: "Low", endLabel: "High", reversed: false },
   },
 
   builtup: {
@@ -162,14 +300,16 @@ const LAYERS = {
     getValue: (p) => (p.built_frac_wc ?? 0) * 100,
     format: (v) => `${v?.toFixed(1)}%`,
     defaultOpacity: 0.72,
+    legend: { startLabel: "Low", endLabel: "High", reversed: false },
   },
 
   vulnerability: {
-    label: "Vulnerability",
-    shortLabel: "Vulnerability",
+    label: "Vulnerability Score",
+    shortLabel: "Vulnerability Score",
     getValue: (p) => p.vulnerability_n,
     format: (v) => v?.toFixed(2),
     defaultOpacity: 0.72,
+    legend: { startLabel: "Low", endLabel: "High", reversed: false },
   },
 };
 
@@ -209,6 +349,58 @@ function getColor(value, layer) {
   if (value >= 0.25) return "#facc15";
   if (value >= 0.1) return "#84cc16";
   return "#15803d";
+}
+
+// ---- Legend helpers -------------------------------------------------------
+// The legend samples getColor() itself, so it always shows exactly the colours
+// the map paints, over the min–max range of the currently loaded wards.
+const LEGEND_STEPS = 48;
+
+function getLayerRange(wards, layerKey) {
+  if (!layerKey || !LAYERS[layerKey]) return null;
+
+  const { getValue } = LAYERS[layerKey];
+
+  let min = Infinity;
+  let max = -Infinity;
+
+  wards.forEach((ward) => {
+    const value = getValue(ward.properties ?? {});
+
+    if (isFiniteNumber(value)) {
+      min = Math.min(min, value);
+      max = Math.max(max, value);
+    }
+  });
+
+  return min <= max ? { min, max } : null;
+}
+
+function buildLegendGradient(layerKey, min, max, reversed) {
+  const colors = [];
+
+  for (let i = 0; i < LEGEND_STEPS; i += 1) {
+    const t = (i + 0.5) / LEGEND_STEPS;
+    const value = min + (max - min) * (reversed ? 1 - t : t);
+
+    colors.push(getColor(value, layerKey));
+  }
+
+  // Merge runs of identical colours into hard-edged stops (mirrors the map's classes).
+  const stops = [];
+  let start = 0;
+
+  for (let i = 1; i <= LEGEND_STEPS; i += 1) {
+    if (i === LEGEND_STEPS || colors[i] !== colors[start]) {
+      const from = ((start / LEGEND_STEPS) * 100).toFixed(2);
+      const to = ((i / LEGEND_STEPS) * 100).toFixed(2);
+
+      stops.push(`${colors[start]} ${from}% ${to}%`);
+      start = i;
+    }
+  }
+
+  return `linear-gradient(to right, ${stops.join(", ")})`;
 }
 
 function downloadFile(content, filename, type) {
@@ -334,6 +526,124 @@ function App() {
       });
   }, []);
 
+  // ---- UI-only state (no effect on data or API calls) ----
+  const [methodologyOpen, setMethodologyOpen] = useState(false);
+  const [exportNotice, setExportNotice] = useState("");
+  const exportNoticeTimer = useRef(null);
+  const sidebarRef = useRef(null);
+  const dcSectionRef = useRef(null);
+
+  useEffect(() => {
+    return () => {
+      clearTimeout(exportNoticeTimer.current);
+    };
+  }, []);
+
+  // Bring the data-centre section into view when a site is selected.
+  useEffect(() => {
+    if (!selectedDataCentre) return;
+
+    const sidebar = sidebarRef.current;
+    const section = dcSectionRef.current;
+
+    if (!sidebar || !section) return;
+
+    const prefersReducedMotion =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+    const top =
+      sidebar.scrollTop +
+      (section.getBoundingClientRect().top -
+        sidebar.getBoundingClientRect().top) -
+      8;
+
+    sidebar.scrollTo({
+      top: Math.max(0, top),
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+  }, [selectedDataCentre]);
+
+  // Reveal the methodology panel when it is expanded near the bottom of the sidebar.
+  useEffect(() => {
+    if (!methodologyOpen) return;
+
+    const panel = document.getElementById("methodology-panel");
+
+    if (!panel) return;
+
+    const prefersReducedMotion =
+      window.matchMedia?.("(prefers-reduced-motion: reduce)").matches;
+
+    panel.scrollIntoView({
+      block: "nearest",
+      behavior: prefersReducedMotion ? "auto" : "smooth",
+    });
+  }, [methodologyOpen]);
+
+  const handleExport = (format) => {
+    try {
+      if (format === "geojson") {
+        exportGeoJSON(wards);
+        setExportNotice("✓ GeoJSON exported");
+      } else {
+        exportCSV(wards);
+        setExportNotice("✓ CSV exported");
+      }
+    } catch (err) {
+      console.error("Export failed:", err);
+      setExportNotice("Export failed. Please try again.");
+    }
+
+    clearTimeout(exportNoticeTimer.current);
+    exportNoticeTimer.current = setTimeout(() => {
+      setExportNotice("");
+    }, 2800);
+  };
+
+  const legendRange = useMemo(
+    () => getLayerRange(wards, activeLayer),
+    [wards, activeLayer]
+  );
+
+  const legendGradient = useMemo(() => {
+    if (!legendRange || !activeLayer) return null;
+
+    return buildLegendGradient(
+      activeLayer,
+      legendRange.min,
+      legendRange.max,
+      LAYERS[activeLayer].legend.reversed
+    );
+  }, [legendRange, activeLayer]);
+
+  // Ring rows of the selected data-centre site (same filter as before, sorted by ring).
+  const selectedRingRows = useMemo(() => {
+    const siteGroup = selectedDataCentre?.properties?.site_group;
+
+    if (!siteGroup || !Array.isArray(dataCentres?.table)) return [];
+
+    return dataCentres.table
+      .filter((row) => row.site_group === siteGroup)
+      .sort((a, b) => a.ring_index - b.ring_index);
+  }, [dataCentres, selectedDataCentre]);
+
+  const keyFinding = useMemo(
+    () => buildKeyFinding(selectedRingRows),
+    [selectedRingRows]
+  );
+
+  const dcSiteCount = dataCentres?.sites?.features?.length ?? 0;
+
+  const dcStatus = dcLoading
+    ? { tone: "is-loading", text: "Loading data-centre sites…" }
+    : dcSiteCount > 0
+      ? {
+        tone: "",
+        text: `${dcSiteCount} data-centre site${dcSiteCount === 1 ? "" : "s"
+          } loaded`,
+      }
+      : { tone: "is-unavailable", text: "Data-centre layer unavailable" };
+
   const geoJsonData = useMemo(
     () => ({
       type: "FeatureCollection",
@@ -446,6 +756,13 @@ function App() {
         </div>
 
         <div className="header-right">
+          {!loading && !error && wards.length > 0 && (
+            <span className="live-indicator">
+              <span className="live-dot" aria-hidden="true"></span>
+              LIVE DATA
+            </span>
+          )}
+
           <span className="city-badge">PUNE</span>
           <span className="planner-badge">PLANNER VIEW</span>
         </div>
@@ -472,9 +789,12 @@ function App() {
       {!loading && !error && (
         <main className="dashboard">
           {/* LEFT SIDEBAR */}
-          <aside className="sidebar">
+          <aside className="sidebar" ref={sidebarRef}>
+            {/* MAP LAYERS */}
             <section className="sidebar-section">
-              <div className="section-label">MAP LAYERS</div>
+              <div className="section-header">
+                <h2 className="section-label">MAP LAYERS</h2>
+              </div>
 
               <div className="layer-controls">
                 {Object.entries(LAYERS).map(([key, layer]) => {
@@ -522,6 +842,7 @@ function App() {
                             max="1"
                             step="0.05"
                             value={layerOpacity[key]}
+                            aria-label={`${layer.shortLabel} layer opacity`}
                             onChange={(e) =>
                               changeOpacity(key, e.target.value)
                             }
@@ -539,80 +860,46 @@ function App() {
               </p>
             </section>
 
+            {/* DATASET STATUS */}
             <section className="sidebar-section">
-              <div className="section-label">DATASET STATUS</div>
+              <div className="section-header">
+                <h2 className="section-label">DATASET STATUS</h2>
+              </div>
 
               <div className="status-card">
-                <div className="status-dot"></div>
+                <div className="status-row">
+                  <div className="status-dot"></div>
 
-                <div>
-                  <strong>Live API data</strong>
-                  <span>{wards.length} Pune wards loaded</span>
+                  <div>
+                    <strong>Live API data</strong>
+                    <span>{wards.length} Pune wards loaded</span>
+                  </div>
+                </div>
+
+                <div className="status-row">
+                  <div className={`status-dot ${dcStatus.tone}`}></div>
+
+                  <div>
+                    <strong>Data centres</strong>
+                    <span>{dcStatus.text}</span>
+                  </div>
                 </div>
               </div>
             </section>
 
+            {/* WARD ANALYTICS */}
             <section className="sidebar-section">
-              <div className="section-label">CURRENT LAYER</div>
-
-              <div className="layer-title">
-                {activeLayer
-                  ? LAYERS[activeLayer].label
-                  : "No layer selected"}
+              <div className="section-header">
+                <h2 className="section-label">WARD ANALYTICS</h2>
               </div>
-
-              <div className="legend">
-                <div className="legend-item">
-                  <span
-                    className="legend-color legend-high"
-                  ></span>
-
-                  <span>
-                    {activeLayer === "priority"
-                      ? "Higher priority"
-                      : activeLayer === "heat"
-                        ? "Higher temperature"
-                        : activeLayer === "canopy"
-                          ? "Lower tree cover"
-                          : activeLayer === "ndvi"
-                            ? "Higher NDVI"
-                            : activeLayer === "builtup"
-                              ? "Higher built-up"
-                              : "Higher vulnerability"}
-                  </span>
-                </div>
-
-                <div className="legend-item">
-                  <span
-                    className="legend-color legend-low"
-                  ></span>
-
-                  <span>
-                    {activeLayer === "priority"
-                      ? "Lower priority"
-                      : activeLayer === "heat"
-                        ? "Lower temperature"
-                        : activeLayer === "canopy"
-                          ? "Higher tree cover"
-                          : activeLayer === "ndvi"
-                            ? "Lower NDVI"
-                            : activeLayer === "builtup"
-                              ? "Lower built-up"
-                              : "Lower vulnerability"}
-                  </span>
-                </div>
-              </div>
-            </section>
-            <section className="sidebar-section selected-section">
-              <div className="section-label">WARD ANALYTICS</div>
 
               {!selectedProperties && (
                 <div className="empty-card">
                   <div className="empty-icon">⌖</div>
 
                   <p>
-                    Click any ward on the map to inspect its
-                    heat, canopy and vulnerability analysis.
+                    Click any ward on the map to inspect its heat,
+                    canopy and vulnerability indicators.
                   </p>
                 </div>
               )}
@@ -625,7 +912,7 @@ function App() {
                     WARD {selectedProperties.ward_id}
                   </div>
 
-                  <h2>{selectedProperties.ward_name}</h2>
+                  <h3>{selectedProperties.ward_name}</h3>
 
                   {/* SCORE */}
                   <div className="score-box">
@@ -672,11 +959,13 @@ function App() {
                     </div>
 
                     <div>
-                      <span>VULNERABILITY</span>
+                      <span>VULNERABILITY SCORE</span>
 
                       <strong>
                         {selectedProperties.vulnerability_n?.toFixed(2)}
                       </strong>
+
+                      <small>Normalized 0–1 index</small>
                     </div>
 
                     <div>
@@ -831,12 +1120,17 @@ function App() {
             </section>
 
             {/* DATA CENTRE ANALYSIS */}
-            <section className="sidebar-section">
-              <div className="section-label">DATA CENTRE ANALYSIS</div>
+            <section
+              ref={dcSectionRef}
+              className={`sidebar-section dc-section ${selectedDataCentre ? "is-prominent" : ""
+                }`}
+            >
+              <div className="section-header">
+                <h2 className="section-label">DATA CENTRE ANALYSIS</h2>
+              </div>
 
               {!selectedDataCentre ? (
                 <div className="empty-state">
-                  <strong>Select a data centre</strong>
                   <p>
                     Click a data-centre marker on the map to view
                     temperature and tree-cover analysis by distance ring.
@@ -866,105 +1160,144 @@ function App() {
                     </div>
                   </div>
 
-                  <div className="dc-ring-title">
-                    RING ANALYSIS
-                  </div>
+                  {selectedRingRows.length === 0 ? (
+                    <div className="dc-analysis-unavailable">
+                      <strong>Not included in analysis</strong>
+                      <p>
+                        This site is under construction or partly
+                        operational and is excluded from the current
+                        surface-temperature and tree-cover analysis.
+                      </p>
+                    </div>
+                  ) : (
+                    <>
+                      <div className="dc-ring-title">
+                        RING ANALYSIS
+                      </div>
 
-                  <div className="dc-ring-list">
-                    {(() => {
-                      const rows =
-                        dataCentres?.table?.filter(
-                          (row) =>
-                            row.site_group ===
-                            selectedDataCentre.properties?.site_group
-                        ) || [];
+                      <div className="dc-ring-list">
+                        {selectedRingRows.map((row) => {
+                          const { range, tag } = getRingParts(row.ring);
 
-                      if (rows.length === 0) {
-                        return (
-                          <div className="dc-analysis-unavailable">
-                            <strong>Not included in analysis</strong>
-                            <p>
-                              This site is under construction or partly
-                              operational and is excluded from the current
-                              surface-temperature and tree-cover analysis.
+                          return (
+                            <div
+                              className={`dc-ring-card ${tag ? `is-${String(tag).toLowerCase()}` : ""
+                                }`}
+                              key={`${row.site_group}-${row.ring_index}`}
+                            >
+                              <div className="dc-ring-head">
+                                <span className="dc-ring-name">
+                                  {range}
+                                </span>
+
+                                {tag && (
+                                  <span className="dc-ring-tag">
+                                    {tag}
+                                  </span>
+                                )}
+                              </div>
+
+                              <div className="dc-metric-grid">
+                                <div className="dc-metric primary">
+                                  <strong>
+                                    {formatFixed(row.lst_mean)}
+                                    <small>°C</small>
+                                  </strong>
+                                  <span>Surface temp</span>
+                                </div>
+
+                                <div className="dc-metric primary">
+                                  <strong>
+                                    {formatFixed(row.trees_pct)}
+                                    <small>%</small>
+                                  </strong>
+                                  <span>Tree cover</span>
+                                </div>
+
+                                <div className="dc-metric">
+                                  <strong>
+                                    {formatSigned(row.lst_minus_reference)}
+                                    <small>°C</small>
+                                  </strong>
+                                  <span>vs reference</span>
+                                </div>
+
+                                <div className="dc-metric">
+                                  <strong>
+                                    {formatSigned(
+                                      row.trees_minus_reference_pct
+                                    )}
+                                    <small>%</small>
+                                  </strong>
+                                  <span>vs reference</span>
+                                </div>
+                              </div>
+                            </div>
+                          );
+                        })}
+                      </div>
+
+                      {keyFinding && (
+                        <div className="dc-key-finding">
+                          <div className="dc-key-label">KEY FINDING</div>
+
+                          <p className="dc-key-statement">
+                            {keyFinding.statement}
+                          </p>
+
+                          <ul className="dc-key-list">
+                            {keyFinding.rings.map((ring) => (
+                              <li key={ring.key}>
+                                <span>{ring.label}</span>
+                                <strong>{ring.value}</strong>
+                              </li>
+                            ))}
+                          </ul>
+
+                          <p className="dc-key-note">{keyFinding.note}</p>
+
+                          {keyFinding.definition && (
+                            <p className="dc-key-note">
+                              {keyFinding.definition}
                             </p>
-                          </div>
-                        );
-                      }
-
-                      return rows
-                        .sort((a, b) => a.ring_index - b.ring_index)
-                        .map((row) => (
-                          <div
-                            className="dc-ring-card"
-                            key={`${row.site_group}-${row.ring_index}`}
-                          >
-                            <div className="dc-ring-name">
-                              {row.ring}
-                            </div>
-
-                            <div className="dc-metric-grid">
-                              <div>
-                                <span>LST</span>
-                                <strong>
-                                  {row.lst_mean?.toFixed(1)}°C
-                                </strong>
-                              </div>
-
-                              <div>
-                                <span>Tree Cover</span>
-                                <strong>
-                                  {row.trees_pct?.toFixed(1)}%
-                                </strong>
-                              </div>
-
-                              <div>
-                                <span>LST vs Reference</span>
-                                <strong>
-                                  {row.lst_minus_reference >= 0 ? "+" : ""}
-                                  {row.lst_minus_reference?.toFixed(1)}°C
-                                </strong>
-                              </div>
-
-                              <div>
-                                <span>Trees vs Reference</span>
-                                <strong>
-                                  {row.trees_minus_reference_pct >= 0
-                                    ? "+"
-                                    : ""}
-                                  {row.trees_minus_reference_pct?.toFixed(1)}%
-                                </strong>
-                              </div>
-                            </div>
-                          </div>
-                        ));
-                    })()}
-                  </div>
+                          )}
+                        </div>
+                      )}
+                    </>
+                  )}
                 </>
               )}
             </section>
 
             {/* EXPORT */}
             <section className="sidebar-section">
-              <div className="section-label">EXPORT</div>
+              <div className="section-header">
+                <h2 className="section-label">EXPORT</h2>
+              </div>
 
               <div className="export-actions">
                 <button
                   className="export-button"
-                  onClick={() => exportGeoJSON(wards)}
+                  onClick={() => handleExport("geojson")}
                   disabled={!wards || wards.length === 0}
                 >
+                  <span className="export-icon" aria-hidden="true">↓</span>
                   Export GeoJSON
                 </button>
 
                 <button
                   className="export-button"
-                  onClick={() => exportCSV(wards)}
+                  onClick={() => handleExport("csv")}
                   disabled={!wards || wards.length === 0}
                 >
+                  <span className="export-icon" aria-hidden="true">↓</span>
                   Export CSV
                 </button>
               </div>
+
+              <p className="export-status" role="status" aria-live="polite">
+                {exportNotice}
+              </p>
 
               <p className="export-note">
                 Export the current 41-ward Pune dataset for
@@ -974,55 +1307,68 @@ function App() {
 
             {/* METHODOLOGY */}
             <section className="sidebar-section">
-              <div className="section-label">METHODOLOGY</div>
+              <button
+                type="button"
+                className="section-toggle"
+                aria-expanded={methodologyOpen}
+                aria-controls="methodology-panel"
+                onClick={() => setMethodologyOpen((open) => !open)}
+              >
+                <span className="section-label">METHODOLOGY</span>
+                <span className="section-toggle-icon" aria-hidden="true">
+                  {methodologyOpen ? "▴" : "▾"}
+                </span>
+              </button>
 
-              <div className="methodology-card">
+              {methodologyOpen && (
+                <div className="methodology-card" id="methodology-panel">
 
-                <div className="methodology-item">
-                  <strong>Study Area</strong>
-                  <span>
-                    Pune Municipal Corporation · 41 wards
-                  </span>
+                  <div className="methodology-item">
+                    <strong>Study Area</strong>
+                    <span>
+                      Pune Municipal Corporation · 41 wards
+                    </span>
+                  </div>
+
+                  <div className="methodology-item">
+                    <strong>Surface Temperature</strong>
+                    <span>
+                      Landsat 8/9 thermal imagery · Mar–May 2026
+                    </span>
+                  </div>
+
+                  <div className="methodology-item">
+                    <strong>Vegetation</strong>
+                    <span>
+                      Sentinel-2 NDVI and provisional WorldCover 2021 tree-cover data
+                    </span>
+                  </div>
+
+                  <div className="methodology-item">
+                    <strong>Priority Score</strong>
+                    <span>
+                      Heat · canopy deficit · vulnerability
+                    </span>
+                  </div>
+
+                  <div className="methodology-item">
+                    <strong>Data Centre Analysis</strong>
+                    <span>
+                      Distance-ring comparison of surface temperature
+                      and tree cover against reference areas
+                    </span>
+                  </div>
+
+                  <div className="methodology-item">
+                    <strong>Important Limitation</strong>
+                    <span>
+                      Satellite LST represents daytime land-surface
+                      temperature, not air temperature or nighttime heat.
+                    </span>
+                  </div>
+
                 </div>
-
-                <div className="methodology-item">
-                  <strong>Surface Temperature</strong>
-                  <span>
-                    Landsat 8/9 thermal imagery · Mar–May 2026
-                  </span>
-                </div>
-
-                <div className="methodology-item">
-                  <strong>Vegetation</strong>
-                  <span>
-                    Sentinel-2 NDVI and provisional WorldCover 2021 tree-cover data
-                  </span>
-                </div>
-
-                <div className="methodology-item">
-                  <strong>Priority Score</strong>
-                  <span>
-                    Heat · canopy deficit · vulnerability
-                  </span>
-                </div>
-
-                <div className="methodology-item">
-                  <strong>Data Centre Analysis</strong>
-                  <span>
-                    Distance-ring comparison of surface temperature
-                    and tree cover against reference areas
-                  </span>
-                </div>
-
-                <div className="methodology-item">
-                  <strong>Important Limitation</strong>
-                  <span>
-                    Satellite LST represents daytime land-surface
-                    temperature, not air temperature or nighttime heat.
-                  </span>
-                </div>
-
-              </div>
+              )}
             </section>
 
           </aside>
@@ -1071,6 +1417,7 @@ function App() {
 
               <DataCentreMarkers
                 dataCentres={dataCentres}
+                selectedDataCentre={selectedDataCentre}
                 onSelect={setSelectedDataCentre}
               />
 
@@ -1079,6 +1426,57 @@ function App() {
                 selectedDataCentre={selectedDataCentre}
               />
             </MapContainer>
+
+            {activeLayer && legendRange && legendGradient && (
+              <div
+                className="map-legend"
+                role="group"
+                aria-label={`${LAYERS[activeLayer].label} legend`}
+              >
+                <div className="legend-title">
+                  {LAYERS[activeLayer].label}
+                </div>
+
+                {activeLayer === "vulnerability" && (
+                  <div className="legend-subtitle">
+                    Normalized 0–1 index
+                  </div>
+                )}
+
+                <div className="legend-scale">
+                  <span className="legend-end">
+                    {LAYERS[activeLayer].legend.startLabel}
+                  </span>
+
+                  <span
+                    className="legend-bar"
+                    style={{ background: legendGradient }}
+                  ></span>
+
+                  <span className="legend-end">
+                    {LAYERS[activeLayer].legend.endLabel}
+                  </span>
+                </div>
+
+                <div className="legend-values">
+                  <span>
+                    {LAYERS[activeLayer].format(
+                      LAYERS[activeLayer].legend.reversed
+                        ? legendRange.max
+                        : legendRange.min
+                    )}
+                  </span>
+
+                  <span>
+                    {LAYERS[activeLayer].format(
+                      LAYERS[activeLayer].legend.reversed
+                        ? legendRange.min
+                        : legendRange.max
+                    )}
+                  </span>
+                </div>
+              </div>
+            )}
           </section>
         </main>
       )}
@@ -1089,7 +1487,7 @@ function App() {
           <span>SHADE · Planner Intelligence Platform</span>
 
           <span>
-            LST data · Landsat 8/9 · 2026 study window
+            {wards.length} PMC wards · Landsat 8/9 · Mar–May 2026
           </span>
         </footer>
       )}
