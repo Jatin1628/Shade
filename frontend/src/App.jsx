@@ -1,5 +1,11 @@
+import CitizenDashboard from "./pages/CitizenDashboard";
+
 import L from "leaflet";
 import { useEffect, useMemo, useRef, useState } from "react";
+
+import { BrowserRouter, Routes, Route } from "react-router-dom";
+import LandingPage from "./pages/LandingPage";
+
 import {
   MapContainer,
   TileLayer,
@@ -10,7 +16,6 @@ import {
 } from "react-leaflet";
 
 import "leaflet/dist/leaflet.css";
-
 import {
   getWards,
   getWard,
@@ -18,6 +23,10 @@ import {
 } from "./services/api";
 
 import "./index.css";
+import "./App.css";
+
+import LoginPage from "./pages/LoginPage";
+import SignupPage from "./pages/SignupPage";
 
 const PUNE_CENTER = [18.5204, 73.8567];
 
@@ -456,7 +465,7 @@ function exportCSV(wards) {
   );
 }
 
-function App() {
+function PlannerDashboard() {
   const [wards, setWards] = useState([]);
   const [selectedWard, setSelectedWard] = useState(null);
   const [wardDetails, setWardDetails] = useState(null);
@@ -1393,39 +1402,39 @@ function App() {
               </div>
             </div>
 
-            <MapContainer
-              center={PUNE_CENTER}
-              zoom={11}
-              className="map"
-              scrollWheelZoom={true}
-            >
-              <TileLayer
-                attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a>'
-                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-              />
-
-              <FitToWards wards={wards} />
-
-              {activeLayer && (
-                <GeoJSON
-                  key={activeLayer}
-                  data={geoJsonData}
-                  style={layerStyle}
-                  onEachFeature={onEachWard}
+            <div className="citizen-map">
+              <MapContainer
+                center={[18.52, 73.85]}
+                zoom={11}
+                style={{ height: "100%", width: "100%" }}
+              >
+                <TileLayer
+                  attribution='&copy; OpenStreetMap contributors'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
-              )}
+                <FitToWards wards={wards} />
 
-              <DataCentreMarkers
-                dataCentres={dataCentres}
-                selectedDataCentre={selectedDataCentre}
-                onSelect={setSelectedDataCentre}
-              />
+                {activeLayer && (
+                  <GeoJSON
+                    key={activeLayer}
+                    data={geoJsonData}
+                    style={layerStyle}
+                    onEachFeature={onEachWard}
+                  />
+                )}
 
-              <DataCentreRings
-                dataCentres={dataCentres}
-                selectedDataCentre={selectedDataCentre}
-              />
-            </MapContainer>
+                <DataCentreMarkers
+                  dataCentres={dataCentres}
+                  selectedDataCentre={selectedDataCentre}
+                  onSelect={setSelectedDataCentre}
+                />
+
+                <DataCentreRings
+                  dataCentres={dataCentres}
+                  selectedDataCentre={selectedDataCentre}
+                />
+              </MapContainer>
+            </div>
 
             {activeLayer && legendRange && legendGradient && (
               <div
@@ -1492,6 +1501,26 @@ function App() {
         </footer>
       )}
     </div>
+  );
+}
+
+function App() {
+  return (
+    <BrowserRouter>
+      <Routes>
+
+      <Route path="/" element={<LandingPage />} />
+
+      <Route path="/login" element={<LoginPage />} />
+
+      <Route path="/signup" element={<SignupPage />} />
+
+      <Route path="/citizen" element={<CitizenDashboard />} />
+
+      <Route path="/planner" element={<PlannerDashboard />} />
+
+    </Routes>
+    </BrowserRouter>
   );
 }
 
