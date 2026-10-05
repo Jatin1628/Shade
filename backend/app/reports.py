@@ -1,20 +1,29 @@
-"""Saved-report history (S13/S14). Firebase Auth verifies the caller; Firestore
-stores a SNAPSHOT so old reports keep the numbers they had on that date.
-Storage is skipped on purpose (needs the paid Blaze plan): the PDF is
-re-rendered from the snapshot on download.
+"""Saved-report history (S13/S14).
 
-Setup: Firebase console -> Project settings -> Service accounts -> generate key.
-Save it OUTSIDE git, then set  FIREBASE_KEY_PATH=C:\\path\\to\\key.json
+LOGIN CHECK (any laptop): the frontend signs in with Firebase and sends the ID
+token as  Authorization: Bearer <token>.  We verify it with Google's PUBLIC
+signing keys (no secret needed), checking signature, expiry, audience (our
+project id) and issuer. So real Firebase logins work on every machine.
 
-DEV MODE (for frontend developers who do NOT have the Firebase key):
-  set  SHADE_DEV_AUTH=1  before starting the server. Then the fixed token
-  "dev-token" is accepted and reports are kept in server MEMORY (lost on
-  restart, never sent to Firestore). It is OFF unless that variable is set,
-  and real Firebase tokens keep working either way. Never switch it on for a
-  deployed server: anyone could then log in as "dev-user".
+STORAGE: if FIREBASE_KEY_PATH points to a service-account key, reports go to
+Firestore (persistent). Otherwise they are kept in server MEMORY (lost on
+restart) so teammates can build and demo without the secret key. The POST
+response says which one was used ("storage").
+
+DEV MODE (offline only): SHADE_DEV_AUTH=1 also accepts the fixed token
+"dev-token" (user "dev-user", memory storage). Never enable on a shared server.
+
+Firestore setup: Firebase console -> Project settings -> Service accounts ->
+generate key, keep it OUTSIDE git, set  FIREBASE_KEY_PATH=C:\\path\\to\\key.json
 """
 import os
 import uuid
+
+import cachecontrol
+import requests
+from google.auth.exceptions import TransportError
+from google.auth.transport import requests as g_requests
+from google.oauth2 import id_token as g_id_token
 from datetime import datetime, timezone
 from fastapi import APIRouter, Header, HTTPException, Response
 from pydantic import BaseModel
@@ -25,6 +34,16 @@ from .pdf import render_report_pdf
 
 router = APIRouter(prefix="/reports", tags=["reports"])
 _db = None
+
+PROJECT_ID = os.environ.get("FIREBASE_PROJECT_ID", "shade-capstone")
+_session = cachecontrol.CacheControl(requests.Session())   # caches Google's public keys
+
+
+def _http(url, method="GET", **kw):
+    """HTTP transport for fetching Google's public keys (5 s timeout, cached)."""
+    kw.setdefault("timeout", 5)
+    return g_requests.Request(session=_session)(url, method=method, **kw)
+
 
 DEV_AUTH = os.environ.get("SHADE_DEV_AUTH") == "1"
 DEV_TOKEN, DEV_UID = "dev-token", "dev-user"
@@ -48,27 +67,46 @@ def _firebase():
     return _db
 
 
+def _verify_firebase_token(token: str) -> str:
+    """Return the Firebase user id (uid) for a valid ID token, else raise 401/503."""
+    bad = HTTPException(401, "Invalid or expired token")
+    if token.count(".") != 2:                       # not a JWT: reject without any network call
+        raise bad
+    try:
+        claims = g_id_token.verify_firebase_token(
+            token, _http, audience=PROJECT_ID, clock_skew_in_seconds=10)
+    except TransportError:
+        raise HTTPException(503, "Could not reach Google to verify the login token")
+    except Exception as e:                          # bad signature, expired, wrong audience...
+        print("Token verification failed:", e)
+        raise bad
+    if claims.get("iss") != f"https://securetoken.google.com/{PROJECT_ID}" or not claims.get("sub"):
+        print("Token verification failed: wrong issuer or missing subject")
+        raise bad
+    return claims["sub"]
+
+
 def _uid(authorization: str | None) -> str:
     if not authorization or not authorization.startswith("Bearer "):
         raise HTTPException(401, "Missing bearer token")
-    token = authorization[7:]
+    token = authorization[7:].strip()
     if DEV_AUTH and token == DEV_TOKEN:
         return DEV_UID
-    _firebase()                      # 503 first if Firebase isn't configured
-    from firebase_admin import auth
-    try:
-        return auth.verify_id_token(token)["uid"]
-    except Exception:
-        raise HTTPException(401, "Invalid or expired token")
+    return _verify_firebase_token(token)
 
 
 # ---- storage: memory for the dev user, Firestore for everyone else ----------
-def _is_dev(uid: str) -> bool:
-    return DEV_AUTH and uid == DEV_UID
+def _firestore_ready() -> bool:
+    key = os.environ.get("FIREBASE_KEY_PATH")
+    return bool(key) and os.path.exists(key)
+
+
+def _use_memory(uid: str) -> bool:
+    return (DEV_AUTH and uid == DEV_UID) or not _firestore_ready()
 
 
 def _put(uid: str, doc: dict) -> str:
-    if _is_dev(uid):
+    if _use_memory(uid):
         rid = uuid.uuid4().hex[:20]
         _mem.setdefault(uid, {})[rid] = doc
         return rid
@@ -78,14 +116,14 @@ def _put(uid: str, doc: dict) -> str:
 
 
 def _get(uid: str, rid: str) -> dict | None:
-    if _is_dev(uid):
+    if _use_memory(uid):
         return _mem.get(uid, {}).get(rid)
     d = _firebase().collection("users").document(uid).collection("reports").document(rid).get()
     return d.to_dict() if d.exists else None
 
 
 def _all(uid: str) -> list[tuple[str, dict]]:
-    if _is_dev(uid):
+    if _use_memory(uid):
         items = list(_mem.get(uid, {}).items())
     else:
         q = (_firebase().collection("users").document(uid).collection("reports")
@@ -127,8 +165,10 @@ def create_report(body: ReportIn, authorization: str | None = Header(None)):
                                   None if body.target_pct is None else body.target_pct / 100,
                                   body.crown_m2),
     }
+    mem = _use_memory(uid)
     rid = _put(uid, doc)
-    return {"id": rid, **{k: v for k, v in doc.items() if k != "createdAt"}}
+    return {"id": rid, "storage": "memory" if mem else "firestore",
+            **{k: v for k, v in doc.items() if k != "createdAt"}}
 
 
 @router.get("")

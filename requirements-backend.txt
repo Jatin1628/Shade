@@ -1,7 +1,9 @@
 fastapi>=0.110
 uvicorn[standard]>=0.29
 pandas>=2.0
-firebase-admin>=6.5      # only needed for /reports; API runs without credentials
+firebase-admin>=6.5      # Firestore storage (only used when FIREBASE_KEY_PATH is set); also brings google-auth
+requests>=2.31           # fetching Google's public keys to verify Firebase logins
+cachecontrol>=0.14
 reportlab>=4.0           # PDF reports
 httpx>=0.27              # for tests
 pytest>=8.0

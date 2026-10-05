@@ -92,3 +92,105 @@ def test_dev_mode_roundtrip(monkeypatch):
     assert c.post("/reports", headers=H, json={"ward_id": 999}).status_code == 404
     assert c.get("/reports").status_code == 401           # still needs a token
     R._mem.clear()
+
+
+# ---- real Firebase-token verification (signed locally; no network needed) ----
+import datetime
+import json
+import time
+
+from cryptography import x509
+from cryptography.hazmat.primitives import hashes, serialization
+from cryptography.hazmat.primitives.asymmetric import rsa
+from cryptography.x509.oid import NameOID
+from google.auth import crypt, jwt as g_jwt
+from google.auth.exceptions import TransportError
+
+PID = R.PROJECT_ID
+
+
+@pytest.fixture(scope="module")
+def signing():
+    key = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    name = x509.Name([x509.NameAttribute(NameOID.COMMON_NAME, "test")])
+    cert = (x509.CertificateBuilder().subject_name(name).issuer_name(name)
+            .public_key(key.public_key()).serial_number(1)
+            .not_valid_before(datetime.datetime(2020, 1, 1))
+            .not_valid_after(datetime.datetime(2099, 1, 1))
+            .sign(key, hashes.SHA256()))
+    priv = key.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+                             serialization.NoEncryption())
+    return crypt.RSASigner.from_string(priv, key_id="k1"), cert.public_bytes(serialization.Encoding.PEM).decode()
+
+
+@pytest.fixture
+def firebase_login(monkeypatch, signing):
+    """Pretend to be Google: serve our test public key, and never touch Firestore."""
+    signer, cert_pem = signing
+
+    class Resp:
+        status = 200
+        data = json.dumps({"k1": cert_pem}).encode()
+
+    calls = []
+    monkeypatch.setattr(R, "_http", lambda url, method="GET", **kw: (calls.append(url), Resp())[1])
+    monkeypatch.setattr(R, "_firestore_ready", lambda: False)
+    monkeypatch.setattr(R, "DEV_AUTH", False)
+    R._mem.clear()
+
+    def token(sub="user-1", aud=PID, iss=None, exp_in=3600):
+        now = int(time.time())
+        claims = {"iss": iss or f"https://securetoken.google.com/{PID}", "aud": aud,
+                  "sub": sub, "iat": now - 5, "exp": now + exp_in, "auth_time": now - 5}
+        return {"Authorization": "Bearer " + g_jwt.encode(signer, claims).decode()}
+
+    token.calls = calls
+    yield token
+    R._mem.clear()
+
+
+def test_valid_firebase_token_saves_and_lists(firebase_login):
+    h = firebase_login("alice")
+    r = c.post("/reports", headers=h, json={"city": "pune", "ward_id": 3})
+    assert r.status_code == 200 and r.json()["storage"] == "memory"
+    assert [x["id"] for x in c.get("/reports", headers=h).json()] == [r.json()["id"]]
+
+
+def test_users_cannot_see_each_others_reports(firebase_login):
+    rid = c.post("/reports", headers=firebase_login("alice"), json={"ward_id": 3}).json()["id"]
+    assert c.get("/reports", headers=firebase_login("bob")).json() == []
+    assert c.get(f"/reports/{rid}", headers=firebase_login("bob")).status_code == 404
+
+
+@pytest.mark.parametrize("kwargs", [
+    {"aud": "some-other-project"},
+    {"iss": "https://securetoken.google.com/some-other-project"},
+    {"exp_in": -3600},
+    {"sub": ""},
+])
+def test_bad_firebase_tokens_rejected(firebase_login, kwargs):
+    assert c.get("/reports", headers=firebase_login(**kwargs)).status_code == 401
+
+
+def test_garbage_token_rejected_without_network(firebase_login):
+    assert c.get("/reports", headers={"Authorization": "Bearer abc"}).status_code == 401
+    assert firebase_login.calls == []                     # no call to Google for a non-JWT
+
+
+def test_google_unreachable_gives_503(monkeypatch, firebase_login):
+    def boom(url, method="GET", **kw):
+        raise TransportError("offline")
+    monkeypatch.setattr(R, "_http", boom)
+    assert c.get("/reports", headers=firebase_login()).status_code == 503
+
+
+def test_forged_signature_rejected(firebase_login):
+    """Token signed with someone else's key (same key id) must NOT be accepted."""
+    other = rsa.generate_private_key(public_exponent=65537, key_size=2048)
+    priv = other.private_bytes(serialization.Encoding.PEM, serialization.PrivateFormat.PKCS8,
+                               serialization.NoEncryption())
+    forger = crypt.RSASigner.from_string(priv, key_id="k1")
+    now = int(time.time())
+    forged = g_jwt.encode(forger, {"iss": f"https://securetoken.google.com/{PID}", "aud": PID,
+                                   "sub": "admin", "iat": now - 5, "exp": now + 3600}).decode()
+    assert c.get("/reports", headers={"Authorization": f"Bearer {forged}"}).status_code == 401

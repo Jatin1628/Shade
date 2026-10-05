@@ -16,17 +16,18 @@ Reports need `FIREBASE_KEY_PATH` (service-account key, kept OUTSIDE the repo).
 `GET /wards/pune/3?target_pct=30&crown_m2=40` recomputes the action plan.
 Coefficients and their sources are in `backend/app/config.py`.
 
-## Frontend developers: using /reports without the Firebase key
-Only the backend owner has the service-account key, so on your laptop the real
-login check returns 503. Use dev mode:
+## /reports: login and storage (no secret key needed to log in)
+Real Firebase logins work on ANY laptop. The server checks the ID token with
+Google's public keys (project id `shade-capstone`, override with
+`FIREBASE_PROJECT_ID`). It needs internet access to Google for that.
 
-    PowerShell:   $env:SHADE_DEV_AUTH="1"
-                  .venv\Scripts\python -m uvicorn backend.app.main:app --reload
+Where reports are stored:
+- `FIREBASE_KEY_PATH` set to the service-account key -> Firestore (persistent).
+- not set -> server memory (lost on restart). The POST response shows
+  `"storage": "memory"` or `"firestore"`.
 
-Then send the header  `Authorization: Bearer dev-token`  on POST /reports,
-GET /reports, GET /reports/{id} and GET /reports/{id}/pdf.
-Reports are kept in server memory (gone on restart). Dev mode is OFF by default;
-never enable it on a deployed server.
+Frontend: sign in with the Firebase SDK, then send
+`Authorization: Bearer <await auth.currentUser.getIdToken()>`.
 
-For the real flow (production/demo): sign in with the Firebase SDK in React,
-call `await auth.currentUser.getIdToken()` and send that as the Bearer token.
+Offline only (no internet): `$env:SHADE_DEV_AUTH="1"` makes the fixed token
+`dev-token` work. Never enable it on a shared or deployed server.
