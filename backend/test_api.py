@@ -61,3 +61,34 @@ def test_vulnerability_uses_census_when_file_present():
     ward = c.get("/wards/pune/3").json()
     expected = "census" if C.VULN_FILE.exists() else "placeholder_built_frac"
     assert ward["vulnerability_source"] == expected
+
+
+# ---- dev-auth mode (lets frontend devs use /reports without the Firebase key) ----
+import pytest
+from backend.app import reports as R
+
+H = {"Authorization": "Bearer dev-token"}
+
+
+def test_dev_token_rejected_when_dev_mode_off(monkeypatch):
+    monkeypatch.setattr(R, "DEV_AUTH", False)
+    # 503 (no Firebase key on this machine) or 401 (key present, token invalid): never 200
+    assert c.get("/reports", headers=H).status_code in (401, 503)
+
+
+def test_dev_mode_roundtrip(monkeypatch):
+    monkeypatch.setattr(R, "DEV_AUTH", True)
+    R._mem.clear()
+    r = c.post("/reports", headers=H, json={"city": "pune", "ward_id": 3, "mode": "citizen"})
+    assert r.status_code == 200
+    rid = r.json()["id"]
+    assert r.json()["snapshot"]["rank"] >= 1
+    lst = c.get("/reports", headers=H).json()
+    assert [x["id"] for x in lst] == [rid]
+    assert c.get(f"/reports/{rid}", headers=H).json()["ward"] == 3
+    pdf = c.get(f"/reports/{rid}/pdf", headers=H)
+    assert pdf.status_code == 200 and pdf.content[:4] == b"%PDF"
+    assert c.get("/reports/nope", headers=H).status_code == 404
+    assert c.post("/reports", headers=H, json={"ward_id": 999}).status_code == 404
+    assert c.get("/reports").status_code == 401           # still needs a token
+    R._mem.clear()
