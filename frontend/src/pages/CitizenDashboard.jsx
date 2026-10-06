@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from "react";
-
+import ResizableSidebar from "../components/ResizableSidebar";
 import {
     MapContainer,
     TileLayer,
@@ -97,6 +97,7 @@ export default function CitizenDashboard() {
     const [wardDetailLoading, setWardDetailLoading] = useState(false);
     const [activeLayer, setActiveLayer] = useState("priority");
     const [loading, setLoading] = useState(true);
+    const [sidebarWidth, setSidebarWidth] = useState(390);
 
     useEffect(() => {
         async function loadWards() {
@@ -222,365 +223,378 @@ export default function CitizenDashboard() {
                 </button>
             </header>
 
-            <main className="citizen-map-layout">
+            <main
+                className="citizen-map-layout"
+                style={{
+                    "--sidebar-width": `${sidebarWidth}px`,
+                }}
+            >
 
-                {/* SIDEBAR */}
-                <aside className="citizen-sidebar">
+                <ResizableSidebar
+                    width={sidebarWidth}
+                    setWidth={setSidebarWidth}
+                    minWidth={300}
+                    maxWidth={520}
+                    className="citizen-sidebar"
+                >
+                    {/* SIDEBAR */}
 
-                    <section className="citizen-welcome">
-                        <span className="citizen-eyebrow">
-                            PUNE · 41 WARDS
-                        </span>
+                        <section className="citizen-welcome">
+                            <span className="citizen-eyebrow">
+                                PUNE · 41 WARDS
+                            </span>
 
-                        <h1>Explore your neighbourhood</h1>
+                            <h1>Explore your neighbourhood</h1>
 
-                        <p>
-                            Discover heat, tree cover and priority
-                            areas across Pune.
-                        </p>
-                    </section>
+                            <p>
+                                Discover heat, tree cover and priority
+                                areas across Pune.
+                            </p>
+                        </section>
 
-                    {/* SEARCH */}
-                    <section className="citizen-search-section">
+                        {/* SEARCH */}
+                        <section className="citizen-search-section">
 
-                        <label htmlFor="ward-search">
-                            Find your ward
-                        </label>
+                            <label htmlFor="ward-search">
+                                Find your ward
+                            </label>
 
-                        <input
-                            id="ward-search"
-                            type="text"
-                            placeholder="Search ward number or name..."
-                            value={search}
-                            onChange={(e) => setSearch(e.target.value)}
-                        />
+                            <input
+                                id="ward-search"
+                                type="text"
+                                placeholder="Search ward number or name..."
+                                value={search}
+                                onChange={(e) => setSearch(e.target.value)}
+                            />
 
-                        {search && (
-                            <div className="citizen-search-results">
+                            {search && (
+                                <div className="citizen-search-results">
 
-                                {filteredWards.length === 0 ? (
-                                    <div className="citizen-no-results">
-                                        No matching ward found.
+                                    {filteredWards.length === 0 ? (
+                                        <div className="citizen-no-results">
+                                            No matching ward found.
+                                        </div>
+                                    ) : (
+                                        filteredWards.map((ward) => {
+                                            const p = ward.properties;
+
+                                            return (
+                                                <button
+                                                    key={p.ward_id}
+                                                    onClick={() =>
+                                                        handleWardClick(ward)
+                                                    }
+                                                >
+                                                    <strong>
+                                                        Ward {p.ward_id}
+                                                    </strong>
+
+                                                    <span>
+                                                        {p.ward_name}
+                                                    </span>
+                                                </button>
+                                            );
+                                        })
+                                    )}
+
+                                </div>
+                            )}
+
+                        </section>
+
+                        {/* LAYER TOGGLE */}
+                        <section className="citizen-layer-section">
+
+                            <div className="citizen-section-title">
+                                EXPLORE BY
+                            </div>
+
+                            <div className="citizen-layer-toggle">
+
+                                {Object.entries(CITIZEN_LAYERS).map(
+                                    ([key, layer]) => (
+                                        <button
+                                            key={key}
+                                            className={
+                                                activeLayer === key
+                                                    ? "active"
+                                                    : ""
+                                            }
+                                            onClick={() =>
+                                                setActiveLayer(key)
+                                            }
+                                        >
+                                            {layer.label}
+                                        </button>
+                                    )
+                                )}
+
+                            </div>
+
+                        </section>
+
+                        {/* URGENT WARDS */}
+                        <section className="urgent-section">
+
+                            <div className="citizen-section-heading">
+                                <div>
+                                    <div className="citizen-section-title">
+                                        PRIORITY AREAS
                                     </div>
-                                ) : (
-                                    filteredWards.map((ward) => {
-                                        const p = ward.properties;
 
-                                        return (
-                                            <button
-                                                key={p.ward_id}
-                                                onClick={() =>
-                                                    handleWardClick(ward)
-                                                }
-                                            >
+                                    <p>
+                                        Wards where heat, tree-cover gaps and vulnerability indicate greater need.
+                                    </p>
+                                </div>
+                            </div>
+
+                            {loading ? (
+                                <p className="citizen-muted">
+                                    Loading...
+                                </p>
+                            ) : (
+                                urgentWards.map((ward) => {
+                                    const p = ward.properties;
+
+                                    return (
+                                        <button
+                                            className="urgent-ward"
+                                            key={p.ward_id}
+                                            onClick={() =>
+                                                setSelectedWard(ward)
+                                            }
+                                        >
+                                            <span>
+                                                #{p.priority_rank ?? "-"}
+                                            </span>
+
+                                            <div>
                                                 <strong>
                                                     Ward {p.ward_id}
                                                 </strong>
 
-                                                <span>
+                                                <small>
                                                     {p.ward_name}
-                                                </span>
-                                            </button>
-                                        );
-                                    })
-                                )}
+                                                </small>
+                                            </div>
 
-                            </div>
-                        )}
-
-                    </section>
-
-                    {/* LAYER TOGGLE */}
-                    <section className="citizen-layer-section">
-
-                        <div className="citizen-section-title">
-                            EXPLORE BY
-                        </div>
-
-                        <div className="citizen-layer-toggle">
-
-                            {Object.entries(CITIZEN_LAYERS).map(
-                                ([key, layer]) => (
-                                    <button
-                                        key={key}
-                                        className={
-                                            activeLayer === key
-                                                ? "active"
-                                                : ""
-                                        }
-                                        onClick={() =>
-                                            setActiveLayer(key)
-                                        }
-                                    >
-                                        {layer.label}
-                                    </button>
-                                )
+                                            <b>
+                                                {p.priority_score?.toFixed(2)}
+                                            </b>
+                                        </button>
+                                    );
+                                })
                             )}
 
-                        </div>
+                        </section>
 
-                    </section>
+                        {/* SELECTED WARD */}
+                        {selectedWard && (
+                            <section className="ward-detail">
+                                <div className="section-label">SELECTED WARD</div>
 
-                    {/* URGENT WARDS */}
-                    <section className="urgent-section">
+                                {wardDetailLoading ? (
+                                    <p>Loading ward details...</p>
+                                ) : wardDetail ? (
+                                    <>
+                                        <div className="ward-detail-header">
+                                            <div>
+                                                <h2>
+                                                    Ward {wardDetail.ward_id}
+                                                </h2>
 
-                        <div className="citizen-section-heading">
-                            <div>
-                                <div className="citizen-section-title">
-                                    PRIORITY AREAS
+                                                <p>{wardDetail.ward_name}</p>
+                                            </div>
+
+                                            <div className="priority-badge">
+                                                <span>Priority Rank</span>
+                                                <strong>#{wardDetail.priority_rank}</strong>
+                                            </div>
+                                        </div>
+
+                                        <div className="ward-stats-grid">
+
+                                            <div className="ward-stat-card">
+                                                <span>MEAN LST</span>
+                                                <strong>
+                                                    {wardDetail.lst_mean?.toFixed(1)}°C
+                                                </strong>
+                                            </div>
+
+                                            <div className="ward-stat-card">
+                                                <span>TREE COVER</span>
+                                                <strong>
+                                                    {(wardDetail.tree_frac_wc * 100).toFixed(1)}%
+                                                </strong>
+                                            </div>
+
+                                            <div className="ward-stat-card">
+                                                <span>VULNERABILITY SCORE</span>
+                                                <strong>
+                                                    {wardDetail.vulnerability?.toFixed(2)}
+                                                </strong>
+                                            </div>
+
+                                            <div className="ward-stat-card">
+                                                <span>PRIORITY SCORE</span>
+                                                <strong>
+                                                    {wardDetail.priority_score?.toFixed(2)}
+                                                </strong>
+                                            </div>
+
+                                        </div>
+
+                                        <div className="vulnerability-note">
+                                            <strong>Vulnerability Score</strong>
+
+                                            <p>
+                                                Normalized 0–1 index based on the available
+                                                census-derived vulnerability data.
+                                            </p>
+                                        </div>
+
+                                        <div className="ward-environment">
+                                            <h3>Environmental Indicators</h3>
+
+                                            <p>
+                                                <strong>NDVI:</strong>{" "}
+                                                {wardDetail.ndvi_s2_mean?.toFixed(2)}
+                                            </p>
+
+                                            <p>
+                                                <strong>Built-up area:</strong>{" "}
+                                                {(wardDetail.built_frac_wc * 100).toFixed(1)}%
+                                            </p>
+                                        </div>
+                                    </>
+                                ) : (
+                                    <p>Unable to load ward details.</p>
+                                )}
+                            </section>
+                        )}
+
+                        {wardDetail && (
+                            <section className="action-plan">
+
+                                <div className="section-label">
+                                    ACTION PLAN
                                 </div>
 
-                                <p>
-                                    Wards where heat, tree-cover gaps and vulnerability indicate greater need.
-                                </p>
-                            </div>
-                        </div>
-
-                        {loading ? (
-                            <p className="citizen-muted">
-                                Loading...
-                            </p>
-                        ) : (
-                            urgentWards.map((ward) => {
-                                const p = ward.properties;
-
-                                return (
-                                    <button
-                                        className="urgent-ward"
-                                        key={p.ward_id}
-                                        onClick={() =>
-                                            setSelectedWard(ward)
-                                        }
-                                    >
-                                        <span>
-                                            #{p.priority_rank ?? "-"}
-                                        </span>
-
-                                        <div>
-                                            <strong>
-                                                Ward {p.ward_id}
-                                            </strong>
-
-                                            <small>
-                                                {p.ward_name}
-                                            </small>
-                                        </div>
-
-                                        <b>
-                                            {p.priority_score?.toFixed(2)}
-                                        </b>
-                                    </button>
-                                );
-                            })
-                        )}
-
-                    </section>
-
-                    {/* SELECTED WARD */}
-                    {selectedWard && (
-                        <section className="ward-detail">
-                            <div className="section-label">SELECTED WARD</div>
-
-                            {wardDetailLoading ? (
-                                <p>Loading ward details...</p>
-                            ) : wardDetail ? (
-                                <>
-                                    <div className="ward-detail-header">
-                                        <div>
-                                            <h2>
-                                                Ward {wardDetail.ward_id}
-                                            </h2>
-
-                                            <p>{wardDetail.ward_name}</p>
-                                        </div>
-
-                                        <div className="priority-badge">
-                                            <span>Priority Rank</span>
-                                            <strong>#{wardDetail.priority_rank}</strong>
-                                        </div>
-                                    </div>
-
-                                    <div className="ward-stats-grid">
-
-                                        <div className="ward-stat-card">
-                                            <span>MEAN LST</span>
-                                            <strong>
-                                                {wardDetail.lst_mean?.toFixed(1)}°C
-                                            </strong>
-                                        </div>
-
-                                        <div className="ward-stat-card">
-                                            <span>TREE COVER</span>
-                                            <strong>
-                                                {(wardDetail.tree_frac_wc * 100).toFixed(1)}%
-                                            </strong>
-                                        </div>
-
-                                        <div className="ward-stat-card">
-                                            <span>VULNERABILITY SCORE</span>
-                                            <strong>
-                                                {wardDetail.vulnerability?.toFixed(2)}
-                                            </strong>
-                                        </div>
-
-                                        <div className="ward-stat-card">
-                                            <span>PRIORITY SCORE</span>
-                                            <strong>
-                                                {wardDetail.priority_score?.toFixed(2)}
-                                            </strong>
-                                        </div>
-
-                                    </div>
-
-                                    <div className="vulnerability-note">
-                                        <strong>Vulnerability Score</strong>
+                                <div className="action-plan-header">
+                                    <div>
+                                        <h2>Close the canopy gap</h2>
 
                                         <p>
-                                            Normalized 0–1 index based on the available
-                                            census-derived vulnerability data.
+                                            An estimated intervention plan for Ward{" "}
+                                            {wardDetail.ward_id}.
                                         </p>
                                     </div>
 
-                                    <div className="ward-environment">
-                                        <h3>Environmental Indicators</h3>
-
-                                        <p>
-                                            <strong>NDVI:</strong>{" "}
-                                            {wardDetail.ndvi_s2_mean?.toFixed(2)}
-                                        </p>
-
-                                        <p>
-                                            <strong>Built-up area:</strong>{" "}
-                                            {(wardDetail.built_frac_wc * 100).toFixed(1)}%
-                                        </p>
+                                    <div className="estimate-badge">
+                                        ESTIMATES
                                     </div>
-                                </>
-                            ) : (
-                                <p>Unable to load ward details.</p>
-                            )}
-                        </section>
-                    )}
+                                </div>
 
-                    {wardDetail && (
-                        <section className="action-plan">
+                                <div className="canopy-gap">
 
-                            <div className="section-label">
-                                ACTION PLAN
-                            </div>
+                                    <div className="canopy-value">
+                                        <span>CURRENT TREE COVER</span>
+                                        <strong>
+                                            {currentCanopyPct.toFixed(1)}%
+                                        </strong>
+                                    </div>
 
-                            <div className="action-plan-header">
-                                <div>
-                                    <h2>Close the canopy gap</h2>
+                                    <div className="canopy-arrow">
+                                        →
+                                    </div>
+
+                                    <div className="canopy-value target">
+                                        <span>TARGET CANOPY</span>
+                                        <strong>
+                                            {targetCanopyPct.toFixed(0)}%
+                                        </strong>
+                                    </div>
+
+                                    <div className="canopy-value gap">
+                                        <span>CANOPY GAP</span>
+                                        <strong>
+                                            {canopyGapPct.toFixed(1)}%
+                                        </strong>
+                                    </div>
+
+                                </div>
+
+                                <div className="action-metrics">
+
+                                    <div className="action-metric">
+                                        <span>TREES NEEDED</span>
+                                        <strong>
+                                            {plan ? formatCount(plan.trees_needed) : "Pending"}
+                                        </strong>
+                                        <small>
+                                            {plan
+                                                ? `Assuming ${plan.crown_area_m2_assumed} m² of canopy per tree`
+                                                : "Waiting for the backend"}
+                                        </small>
+                                    </div>
+
+                                    <div className="action-metric">
+                                        <span>ESTIMATED COST</span>
+                                        <strong>
+                                            {plan
+                                                ? `${formatInr(plan.cost_inr_low)} – ${formatInr(plan.cost_inr_high)}`
+                                                : "Pending"}
+                                        </strong>
+                                        <small>
+                                            Low: sapling and planting. High: adds guard, watering and about
+                                            3 years of upkeep (high end still awaiting PMC's rate).
+                                        </small>
+                                    </div>
+
+                                    <div className="action-metric">
+                                        <span>COOLING AT TARGET CANOPY</span>
+                                        <strong>
+                                            {plan ? `about ${plan.cooling_c_at_target_canopy} °C` : "Pending"}
+                                        </strong>
+                                        <small>
+                                            From the tree cover vs temperature pattern across Pune's wards.
+                                            An association, not a proven effect.
+                                        </small>
+                                    </div>
+
+                                    <div className="action-metric">
+                                        <span>CO₂ PER YEAR</span>
+                                        <strong>
+                                            {plan
+                                                ? `about ${formatCount(plan.co2_tonnes_per_year_young_trees)} t`
+                                                : "Pending"}
+                                        </strong>
+                                        <small>For young trees (1 to 10 years old).</small>
+                                    </div>
+
+                                </div>
+
+                                <div className="estimate-note">
+                                    <strong>About these estimates</strong>
 
                                     <p>
-                                        An estimated intervention plan for Ward{" "}
-                                        {wardDetail.ward_id}.
+                                        Action-plan values are intended as planning estimates,
+                                        not field measurements. Tree count, cost, cooling and
+                                        CO₂ impact require published coefficients and assumptions.
                                     </p>
                                 </div>
 
-                                <div className="estimate-badge">
-                                    ESTIMATES
-                                </div>
-                            </div>
+                                <SaveReportButton
+                                    key={wardDetail.ward_id}
+                                    wardId={wardDetail.ward_id}
+                                />
 
-                            <div className="canopy-gap">
+                            </section>
+                        )}
 
-                                <div className="canopy-value">
-                                    <span>CURRENT TREE COVER</span>
-                                    <strong>
-                                        {currentCanopyPct.toFixed(1)}%
-                                    </strong>
-                                </div>
+                
+                </ResizableSidebar>
 
-                                <div className="canopy-arrow">
-                                    →
-                                </div>
-
-                                <div className="canopy-value target">
-                                    <span>TARGET CANOPY</span>
-                                    <strong>
-                                        {targetCanopyPct.toFixed(0)}%
-                                    </strong>
-                                </div>
-
-                                <div className="canopy-value gap">
-                                    <span>CANOPY GAP</span>
-                                    <strong>
-                                        {canopyGapPct.toFixed(1)}%
-                                    </strong>
-                                </div>
-
-                            </div>
-
-                            <div className="action-metrics">
-
-                                <div className="action-metric">
-                                    <span>TREES NEEDED</span>
-                                    <strong>
-                                        {plan ? formatCount(plan.trees_needed) : "Pending"}
-                                    </strong>
-                                    <small>
-                                        {plan
-                                            ? `Assuming ${plan.crown_area_m2_assumed} m² of canopy per tree`
-                                            : "Waiting for the backend"}
-                                    </small>
-                                </div>
-
-                                <div className="action-metric">
-                                    <span>ESTIMATED COST</span>
-                                    <strong>
-                                        {plan
-                                            ? `${formatInr(plan.cost_inr_low)} – ${formatInr(plan.cost_inr_high)}`
-                                            : "Pending"}
-                                    </strong>
-                                    <small>
-                                        Low: sapling and planting. High: adds guard, watering and about
-                                        3 years of upkeep (high end still awaiting PMC's rate).
-                                    </small>
-                                </div>
-
-                                <div className="action-metric">
-                                    <span>COOLING AT TARGET CANOPY</span>
-                                    <strong>
-                                        {plan ? `about ${plan.cooling_c_at_target_canopy} °C` : "Pending"}
-                                    </strong>
-                                    <small>
-                                        From the tree cover vs temperature pattern across Pune's wards.
-                                        An association, not a proven effect.
-                                    </small>
-                                </div>
-
-                                <div className="action-metric">
-                                    <span>CO₂ PER YEAR</span>
-                                    <strong>
-                                        {plan
-                                            ? `about ${formatCount(plan.co2_tonnes_per_year_young_trees)} t`
-                                            : "Pending"}
-                                    </strong>
-                                    <small>For young trees (1 to 10 years old).</small>
-                                </div>
-
-                            </div>
-
-                            <div className="estimate-note">
-                                <strong>About these estimates</strong>
-
-                                <p>
-                                    Action-plan values are intended as planning estimates,
-                                    not field measurements. Tree count, cost, cooling and
-                                    CO₂ impact require published coefficients and assumptions.
-                                </p>
-                            </div>
-
-                            <SaveReportButton
-                                key={wardDetail.ward_id}
-                                wardId={wardDetail.ward_id}
-                            />
-
-                        </section>
-                    )}
-
-                </aside>
 
                 { }
                 <section className="citizen-map">

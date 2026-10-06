@@ -607,8 +607,14 @@
 .citizen-map-layout {
   min-height: calc(100vh - 72px);
 
-  display: grid;
-  grid-template-columns: 390px minmax(0, 1fr);
+  display: grid !important;
+
+  grid-template-columns:
+    var(--sidebar-width)
+    10px
+    minmax(0, 1fr) !important;
+
+  grid-template-rows: 1fr;
 
   gap: 0;
 
@@ -1329,16 +1335,12 @@
     grid-template-columns: 1fr;
   }
 
-  .citizen-sidebar {
-    height: auto;
-    max-height: none;
-
-    border-right: none;
-    border-bottom: 1px solid #dce6df;
+  .sidebar-resizer {
+    display: none;
   }
 
-  .citizen-map {
-    height: 600px;
+  .resizable-sidebar {
+    width: 100% !important;
   }
 }
 
@@ -2499,4 +2501,214 @@
     padding-left: 0;
     border-left: none;
   }
+}
+
+/* =========================================================
+   RESIZABLE SIDEBARS
+   ========================================================= */
+
+.resizable-sidebar {
+  position: relative;
+  flex: 0 0 auto;
+  height: 100%;
+  box-sizing: border-box;
+}
+
+.sidebar-resizer {
+  width: 10px;
+  height: 100%;
+  flex: 0 0 10px;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #ffffff;
+  border-right: 1px solid #dce6df;
+  border-left: 1px solid #eef3ef;
+
+  cursor: col-resize;
+  transition: background 0.15s ease;
+  z-index: 1100;
+}
+
+.sidebar-resizer:hover {
+  background: #edf6ef;
+}
+
+.sidebar-resizer span {
+  width: 3px;
+  height: 42px;
+
+  border-radius: 10px;
+  background: #b7c9bd;
+
+  transition:
+    height 0.15s ease,
+    background 0.15s ease;
+}
+
+.sidebar-resizer:hover span {
+  height: 58px;
+  background: #4c8b68;
+}
+
+/* =========================================================
+   RESIZABLE CITIZEN LAYOUT — FINAL OVERRIDE
+   ========================================================= */
+
+.citizen-map-layout {
+  --sidebar-width: 390px;
+
+  display: grid !important;
+  grid-template-columns: var(--sidebar-width) 10px minmax(0, 1fr) !important;
+  grid-template-rows: 1fr !important;
+
+  width: 100%;
+  height: calc(100vh - 72px);
+  min-height: 0;
+
+  overflow: hidden;
+}
+
+.citizen-map-layout .resizable-sidebar {
+  grid-column: 1;
+  grid-row: 1;
+
+  width: var(--sidebar-width);
+  height: 100%;
+
+  min-width: 0;
+}
+
+.citizen-map-layout .sidebar-resizer {
+  grid-column: 2;
+  grid-row: 1;
+
+  width: 10px;
+  height: 100%;
+
+  cursor: col-resize;
+  z-index: 1100;
+}
+
+.citizen-map-layout .citizen-map {
+  grid-column: 3;
+  grid-row: 1;
+
+  width: 100%;
+  height: 100%;
+
+  min-width: 0;
+  min-height: 0;
+}
+
+/* Mobile */
+@media (max-width: 900px) {
+  .citizen-map-layout {
+    display: grid !important;
+    grid-template-columns: 1fr !important;
+    grid-template-rows: auto 1fr !important;
+
+    height: auto;
+    min-height: calc(100vh - 72px);
+  }
+
+  .citizen-map-layout .resizable-sidebar {
+    grid-column: 1;
+    grid-row: 1;
+
+    width: 100% !important;
+    height: auto;
+  }
+
+  .citizen-map-layout .sidebar-resizer {
+    display: none;
+  }
+
+  .citizen-map-layout .citizen-map {
+    grid-column: 1;
+    grid-row: 2;
+
+    height: 600px;
+  }
+}
+
+/* =========================================================
+   PLANNER — RESIZABLE SIDEBAR
+   ========================================================= */
+
+.dashboard {
+  --planner-sidebar-width: 380px;
+
+  display: grid !important;
+
+  grid-template-columns:
+    var(--planner-sidebar-width)
+    10px
+    minmax(0, 1fr) !important;
+
+  min-width: 0;
+  overflow: hidden;
+}
+
+/* Planner sidebar */
+.dashboard .sidebar {
+  grid-column: 1;
+  grid-row: 1;
+
+  width: var(--planner-sidebar-width) !important;
+  min-width: 0;
+
+  overflow-y: auto;
+  overflow-x: hidden;
+
+  box-sizing: border-box;
+}
+
+/* Draggable divider */
+.planner-sidebar-resizer {
+  grid-column: 2;
+  grid-row: 1;
+
+  width: 10px;
+  height: 100%;
+
+  cursor: col-resize;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  background: #f5f8f5;
+
+  z-index: 1000;
+}
+
+.planner-sidebar-resizer span {
+  width: 4px;
+  height: 44px;
+
+  border-radius: 999px;
+
+  background: #aebeb3;
+
+  transition:
+    height 0.15s ease,
+    background 0.15s ease;
+}
+
+.planner-sidebar-resizer:hover span {
+  height: 70px;
+  background: #347a55;
+}
+
+/* Planner map */
+.dashboard .map-area {
+  grid-column: 3;
+  grid-row: 1;
+
+  width: 100%;
+  min-width: 0;
+  min-height: 0;
 }

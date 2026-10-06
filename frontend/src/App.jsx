@@ -477,6 +477,34 @@ function PlannerDashboard() {
   const [dcLoading, setDcLoading] = useState(false);
   const [selectedDataCentre, setSelectedDataCentre] = useState(null);
   const [activeLayer, setActiveLayer] = useState("priority");
+  const [plannerSidebarWidth, setPlannerSidebarWidth] = useState(380);
+
+  const handlePlannerResizeStart = (e) => {
+    e.preventDefault();
+
+    const handleMouseMove = (event) => {
+      const newWidth = Math.min(
+        560,
+        Math.max(320, event.clientX)
+      );
+
+      setPlannerSidebarWidth(newWidth);
+    };
+
+    const handleMouseUp = () => {
+      document.removeEventListener("mousemove", handleMouseMove);
+      document.removeEventListener("mouseup", handleMouseUp);
+
+      document.body.style.cursor = "";
+      document.body.style.userSelect = "";
+    };
+
+    document.addEventListener("mousemove", handleMouseMove);
+    document.addEventListener("mouseup", handleMouseUp);
+
+    document.body.style.cursor = "col-resize";
+    document.body.style.userSelect = "none";
+  };
 
   const [layerOpacity, setLayerOpacity] = useState({
     priority: 0.72,
@@ -799,7 +827,12 @@ function PlannerDashboard() {
       )}
 
       {!loading && !error && (
-        <main className="dashboard">
+        <main
+          className="dashboard"
+          style={{
+            "--planner-sidebar-width": `${plannerSidebarWidth}px`,
+          }}
+        >
           {/* LEFT SIDEBAR */}
           <aside className="sidebar" ref={sidebarRef}>
             {/* MAP LAYERS */}
@@ -1384,6 +1417,18 @@ function PlannerDashboard() {
             </section>
 
           </aside>
+
+          {/* SIDEBAR RESIZER */}
+          <div
+            className="planner-sidebar-resizer"
+            onMouseDown={handlePlannerResizeStart}
+            role="separator"
+            aria-orientation="vertical"
+            aria-label="Resize planner sidebar"
+          >
+            <span />
+          </div>
+
 
           {/* MAP */}
           <section className="map-area">
