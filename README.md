@@ -40,7 +40,7 @@ Citizens can explore Pune without creating an account.
 - Google Sign-In and Email/Password authentication
 - Resizable sidebar for better map exploration
 
-The project design intentionally distinguishes between **planning estimates** and field measurements. Cost, tree-count, cooling and CO₂ values are presented as estimates based on the available coefficients and assumptions.
+The project intentionally distinguishes between **planning estimates** and field measurements. Cost, tree-count, cooling and CO₂ values are presented as estimates based on the available coefficients and assumptions.
 
 ---
 
@@ -75,7 +75,7 @@ Selecting a ward provides:
 
 ### Data-Centre Analysis
 
-The Planner View also provides:
+The Planner View provides:
 
 - Data-centre locations
 - Distance rings
@@ -89,7 +89,7 @@ The analysis is presented as a **measured surface-temperature comparison** rathe
 
 ### Export & Methodology
 
-Planner users can also access:
+Planner users can access:
 
 - GeoJSON export
 - CSV export
@@ -278,6 +278,7 @@ SHADE/
 │   │
 │   └── src/
 │       ├── assets/
+│       │
 │       ├── auth/
 │       │   ├── AuthProvider.jsx
 │       │   ├── RequireAuth.jsx
@@ -298,6 +299,7 @@ SHADE/
 │       │   ├── api.js
 │       │   └── reports.js
 │       │
+│       ├── firebase.js
 │       ├── App.jsx
 │       ├── App.css
 │       ├── index.css
@@ -432,6 +434,20 @@ Before running the frontend, create the following file:
 
 ```text
 frontend/.env.local
+```
+
+Add your Firebase configuration:
+
+```env
+VITE_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
+VITE_FIREBASE_AUTH_DOMAIN=YOUR_FIREBASE_AUTH_DOMAIN
+VITE_FIREBASE_PROJECT_ID=YOUR_FIREBASE_PROJECT_ID
+```
+
+Replace the placeholder values with the Firebase configuration provided for the SHADE project.
+
+> **Note:** `.env.local` is intentionally git-ignored and must not be committed to the repository.
+
 ---
 
 # 4. Start the Frontend
@@ -730,9 +746,9 @@ Satellite / Geospatial Data
            ↓
     Ward Prioritisation
            ↓
-    Action Planning
+     Action Planning
            ↓
-     Decision Support
+      Decision Support
 ```
 
 Instead of simply showing **where Pune is hot**, the system attempts to answer:
@@ -775,7 +791,7 @@ The project was divided into major workstreams covering:
    - Methodology
    - Integration and QA
 
-The project specification defines the Citizen flow as S1–S8 and the Planner/integration flow as S9–S12. Urban Heat & Tree-Canopy Priori…
+The project specification defines the Citizen flow as S1–S8 and the Planner/integration flow as S9–S12.
 
 ---
 
