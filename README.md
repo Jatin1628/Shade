@@ -417,38 +417,21 @@ npm install
 
 ---
 
-## Firebase Configuration
+## 🔐 Firebase Configuration
 
-Firebase authentication is already configured for the project.
+SHADE uses Firebase Authentication for user login and report management.
 
-Create:
+Supported authentication methods:
+
+- Email/Password
+- Google Sign-In
+
+### Configure Firebase
+
+Before running the frontend, create the following file:
 
 ```text
 frontend/.env.local
-```
-
-Add:
-
-```env
-VITE_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
-VITE_FIREBASE_AUTH_DOMAIN=YOUR_FIREBASE_AUTH_DOMAIN
-VITE_FIREBASE_PROJECT_ID=YOUR_FIREBASE_PROJECT_ID
-```
-
-For the SHADE Firebase project, these values are provided to project contributors through the team's Firebase setup.
-
-### Important
-
-Do **not** commit:
-
-```text
-.env.local
-```
-
-The file is intentionally git-ignored.
-
-Do not put Firebase **service-account/private keys** in the frontend or commit them to GitHub.
-
 ---
 
 # 4. Start the Frontend
@@ -824,17 +807,3 @@ This project was developed as an academic capstone project.
 **Urban Heat & Tree-Canopy Intelligence**
 
 > **Making Pune cooler & greener.**
-
----
-
-## One thing I'd change before you commit this README
-
-Don't put the **actual Firebase API key** in the README. Use:
-
-```env
-VITE_FIREBASE_API_KEY=YOUR_FIREBASE_API_KEY
-```
-
-The actual `.env.local` stays on each developer's machine.
-
-Also, because your current `main` now contains the tested Firebase/auth + report + resizable-sidebar work, this README accurately documents the setup you're actually using rather than the older original project plan.
