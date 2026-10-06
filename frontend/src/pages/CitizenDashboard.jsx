@@ -17,6 +17,9 @@ import {
     getWard,
 } from "../services/api";
 
+import SaveReportButton from "../components/SaveReportButton";
+import { formatCount, formatInr } from "../utils/format";
+
 const PUNE_CENTER = [18.5204, 73.8567];
 
 const CITIZEN_LAYERS = {
@@ -141,7 +144,9 @@ export default function CitizenDashboard() {
         ? wardDetail.tree_frac_wc * 100
         : null;
 
-    const targetCanopyPct = wardDetail?.action_plan?.["target canopy pct"] ?? 25;
+    const plan = wardDetail?.action_plan;
+
+    const targetCanopyPct = plan?.target_canopy_pct ?? 25;
 
     const canopyGapPct = wardDetail
         ? Math.max(targetCanopyPct - currentCanopyPct, 0)
@@ -511,34 +516,48 @@ export default function CitizenDashboard() {
 
                                 <div className="action-metric">
                                     <span>TREES NEEDED</span>
-                                    <strong>Pending</strong>
+                                    <strong>
+                                        {plan ? formatCount(plan.trees_needed) : "Pending"}
+                                    </strong>
                                     <small>
-                                        Requires canopy-per-tree assumption
+                                        {plan
+                                            ? `Assuming ${plan.crown_area_m2_assumed} m² of canopy per tree`
+                                            : "Waiting for the backend"}
                                     </small>
                                 </div>
 
                                 <div className="action-metric">
                                     <span>ESTIMATED COST</span>
-                                    <strong>Pending</strong>
+                                    <strong>
+                                        {plan
+                                            ? `${formatInr(plan.cost_inr_low)} – ${formatInr(plan.cost_inr_high)}`
+                                            : "Pending"}
+                                    </strong>
                                     <small>
-                                        Requires published cost coefficient
+                                        Low: sapling and planting. High: adds guard, watering and about
+                                        3 years of upkeep (high end still awaiting PMC's rate).
                                     </small>
                                 </div>
 
                                 <div className="action-metric">
-                                    <span>5-YEAR COOLING</span>
-                                    <strong>Pending</strong>
+                                    <span>COOLING AT TARGET CANOPY</span>
+                                    <strong>
+                                        {plan ? `about ${plan.cooling_c_at_target_canopy} °C` : "Pending"}
+                                    </strong>
                                     <small>
-                                        Requires published cooling coefficient
+                                        From the tree cover vs temperature pattern across Pune's wards.
+                                        An association, not a proven effect.
                                     </small>
                                 </div>
 
                                 <div className="action-metric">
-                                    <span>5-YEAR CO₂</span>
-                                    <strong>Pending</strong>
-                                    <small>
-                                        Requires published sequestration coefficient
-                                    </small>
+                                    <span>CO₂ PER YEAR</span>
+                                    <strong>
+                                        {plan
+                                            ? `about ${formatCount(plan.co2_tonnes_per_year_young_trees)} t`
+                                            : "Pending"}
+                                    </strong>
+                                    <small>For young trees (1 to 10 years old).</small>
                                 </div>
 
                             </div>
@@ -552,6 +571,11 @@ export default function CitizenDashboard() {
                                     CO₂ impact require published coefficients and assumptions.
                                 </p>
                             </div>
+
+                            <SaveReportButton
+                                key={wardDetail.ward_id}
+                                wardId={wardDetail.ward_id}
+                            />
 
                         </section>
                     )}

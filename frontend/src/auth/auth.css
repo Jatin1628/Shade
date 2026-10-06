@@ -1,0 +1,51 @@
+/* Plain black-and-white styling for login, signup, reports and the save-report box.
+   Everything is prefixed "sh-" so it cannot clash with the dashboards' CSS.
+   Restyle freely: only colours, fonts and spacing live here. */
+.sh-page {
+  min-height: 100vh;
+  box-sizing: border-box;
+  padding: 48px 16px;
+  background: #fff;
+  color: #000;
+  font-family: system-ui, -apple-system, "Segoe UI", Arial, sans-serif;
+  line-height: 1.45;
+}
+.sh-box { max-width: 380px; margin: 0 auto; }
+.sh-wide { max-width: 860px; margin: 0 auto; }
+.sh-page h1 { font-size: 24px; margin: 0 0 4px; }
+.sh-muted { color: #555; font-size: 14px; margin: 0 0 24px; }
+
+.sh-field { display: block; margin: 0 0 14px; }
+.sh-field > span { display: block; font-size: 14px; margin-bottom: 4px; }
+.sh-field input {
+  width: 100%; box-sizing: border-box; padding: 10px;
+  border: 1px solid #000; border-radius: 0; background: #fff; color: #000; font-size: 16px;
+}
+
+.sh-btn {
+  display: inline-block; box-sizing: border-box; padding: 10px 16px;
+  border: 1px solid #000; border-radius: 0; background: #000; color: #fff;
+  font-size: 16px; cursor: pointer; text-align: center; text-decoration: none;
+}
+.sh-btn:disabled { opacity: 0.5; cursor: default; }
+.sh-btn-block { display: block; width: 100%; }
+.sh-btn-outline { background: #fff; color: #000; }
+
+.sh-or { text-align: center; color: #555; font-size: 14px; margin: 14px 0; }
+.sh-error, .sh-note {
+  border: 1px solid #000; padding: 10px; margin: 0 0 14px; font-size: 14px;
+}
+.sh-error { border-width: 2px; }
+.sh-links { margin-top: 20px; font-size: 14px; }
+.sh-link { color: #000; text-decoration: underline; background: none; border: 0; padding: 0; font: inherit; cursor: pointer; }
+.sh-loading { padding: 48px 16px; font-family: system-ui, Arial, sans-serif; color: #000; background: #fff; }
+
+.sh-save { margin-top: 16px; padding-top: 16px; border-top: 1px solid #000; font-size: 14px; }
+.sh-save p { margin: 0 0 10px; }
+.sh-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+
+.sh-table { width: 100%; border-collapse: collapse; font-size: 14px; margin-top: 16px; }
+.sh-table th, .sh-table td { border: 1px solid #000; padding: 8px; text-align: left; }
+.sh-table th { background: #f2f2f2; }
+
+.sh-page :focus-visible, .sh-save :focus-visible { outline: 2px solid #000; outline-offset: 2px; }

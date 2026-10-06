@@ -5,6 +5,9 @@ import { useEffect, useMemo, useRef, useState } from "react";
 
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import LandingPage from "./pages/LandingPage";
+import AuthProvider from "./auth/AuthProvider";
+import RequireAuth from "./auth/RequireAuth";
+import ReportsPage from "./pages/ReportsPage";
 
 import {
   MapContainer,
@@ -1506,21 +1509,39 @@ function PlannerDashboard() {
 
 function App() {
   return (
-    <BrowserRouter>
-      <Routes>
+    <AuthProvider>
+      <BrowserRouter>
+        <Routes>
 
-      <Route path="/" element={<LandingPage />} />
+        <Route path="/" element={<LandingPage />} />
 
-      <Route path="/login" element={<LoginPage />} />
+        <Route path="/login" element={<LoginPage />} />
 
-      <Route path="/signup" element={<SignupPage />} />
+        <Route path="/signup" element={<SignupPage />} />
 
-      <Route path="/citizen" element={<CitizenDashboard />} />
+        <Route path="/citizen" element={<CitizenDashboard />} />
 
-      <Route path="/planner" element={<PlannerDashboard />} />
+        <Route
+          path="/planner"
+          element={
+            <RequireAuth>
+              <PlannerDashboard />
+            </RequireAuth>
+          }
+        />
 
-    </Routes>
-    </BrowserRouter>
+        <Route
+          path="/reports"
+          element={
+            <RequireAuth>
+              <ReportsPage />
+            </RequireAuth>
+          }
+        />
+
+      </Routes>
+      </BrowserRouter>
+    </AuthProvider>
   );
 }
 

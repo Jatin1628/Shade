@@ -1,105 +1,84 @@
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, Navigate, useLocation } from "react-router-dom";
+import { GoogleAuthProvider, signInWithEmailAndPassword, signInWithPopup } from "firebase/auth";
+import { auth, firebaseConfigured } from "../firebase";
+import { useAuth } from "../auth/authContext";
+import { friendlyAuthError } from "../auth/errors";
+import "../auth/auth.css";
 
 export default function LoginPage() {
-  const navigate = useNavigate();
+  const { user, loading } = useAuth();
+  const from = useLocation().state?.from || "/planner";
 
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [busy, setBusy] = useState(false);
 
-  const handleLogin = (e) => {
-    e.preventDefault();
+  // Already signed in (or just finished signing in): go where they were headed.
+  if (!loading && user) return <Navigate to={from} replace />;
+
+  async function run(signIn) {
     setError("");
-
-    const savedUser = JSON.parse(
-      localStorage.getItem("shadeUser")
-    );
-
-    if (!savedUser) {
-      setError("No account found. Please create an account first.");
-      return;
+    setBusy(true);
+    try {
+      await signIn();
+    } catch (err) {
+      setError(friendlyAuthError(err));
+    } finally {
+      setBusy(false);
     }
+  }
 
-    if (
-      savedUser.email !== email ||
-      savedUser.password !== password
-    ) {
-      setError("Invalid email or password.");
-      return;
-    }
-
-    localStorage.setItem("shadeLoggedIn", "true");
-
-    navigate("/planner");
+  const handleEmailLogin = (e) => {
+    e.preventDefault();
+    run(() => signInWithEmailAndPassword(auth, email.trim(), password));
   };
+  const handleGoogle = () => run(() => signInWithPopup(auth, new GoogleAuthProvider()));
 
   return (
-    <div className="auth-page">
-      <div className="auth-card">
+    <div className="sh-page">
+      <div className="sh-box">
+        <h1>Sign in</h1>
+        <p className="sh-muted">Sign in to use the planner view and save reports.</p>
 
-        <div className="auth-logo">🌳</div>
+        {!firebaseConfigured && (
+          <p className="sh-error">
+            Firebase is not configured. Copy frontend/.env.example to frontend/.env.local, fill in the
+            values from the Firebase console, then restart npm run dev.
+          </p>
+        )}
 
-        <h1>Welcome back</h1>
+        <form onSubmit={handleEmailLogin}>
+          <label className="sh-field">
+            <span>Email</span>
+            <input type="email" autoComplete="email" value={email}
+              onChange={(e) => setEmail(e.target.value)} required />
+          </label>
+          <label className="sh-field">
+            <span>Password</span>
+            <input type="password" autoComplete="current-password" value={password}
+              onChange={(e) => setPassword(e.target.value)} required />
+          </label>
 
-        <p className="auth-subtitle">
-          Sign in to access the SHADE Planner View
-        </p>
+          {error && <p className="sh-error" role="alert">{error}</p>}
 
-        <form onSubmit={handleLogin}>
-
-          <label>Email</label>
-
-          <input
-            type="email"
-            placeholder="you@example.com"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-            required
-          />
-
-          <label>Password</label>
-
-          <input
-            type="password"
-            placeholder="Enter your password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            required
-          />
-
-          {error && (
-            <p className="auth-error">
-              {error}
-            </p>
-          )}
-
-          <button
-            type="submit"
-            className="auth-primary-btn"
-          >
-            Sign In
+          <button type="submit" className="sh-btn sh-btn-block" disabled={busy || !firebaseConfigured}>
+            {busy ? "Signing in..." : "Sign in"}
           </button>
-
         </form>
 
-        <p className="auth-switch">
-          Don't have an account?{" "}
-          <button
-            onClick={() => navigate("/signup")}
-            className="auth-link"
-          >
-            Sign Up
-          </button>
-        </p>
-
-        <button
-          className="auth-back-btn"
-          onClick={() => navigate("/")}
-        >
-          ← Back to SHADE
+        <p className="sh-or">or</p>
+        <button type="button" className="sh-btn sh-btn-outline sh-btn-block"
+          onClick={handleGoogle} disabled={busy || !firebaseConfigured}>
+          Continue with Google
         </button>
 
+        <p className="sh-links">
+          No account? <Link className="sh-link" to="/signup" state={{ from }}>Create one</Link>
+          {" | "}
+          <Link className="sh-link" to="/">Back to home</Link>
+        </p>
       </div>
     </div>
   );
